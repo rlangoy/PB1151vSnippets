@@ -12,7 +12,12 @@ The caller never touches JSON or the raw port directly — only objects, propert
 ## Class diagram
 
 ```mermaid
+---
+config:
+  layout: elk
+---
 classDiagram
+direction TB
     class JsonSerialController {
         +LedControl LedControl
         +ButtonControl ButtonControl
