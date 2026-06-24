@@ -8,7 +8,7 @@ namespace SerialLedBtnLibEx
     {
         JsonSerialController jsonSerialController;
 
-        private SerialPort _serialPort;
+        private SerialPortEx _serialPort;
 
         public Form1()
         {
@@ -22,14 +22,13 @@ namespace SerialLedBtnLibEx
             //Set up GUI
             checkBox1.Text = "LED1";
             checkBox2.Text = "SW1";
-
             checkBox3.Text = "LED2";
             checkBox4.Text = "SW2";
             checkBox5.Text = "LED3";
             checkBox6.Text = "SW3";
             checkBox7.Text = "LED4";
 
-            _serialPort = new SerialPort("COM3", 9600);
+            _serialPort = new SerialPortEx { PortName = "COM3", BaudRate = 9600 };
             _serialPort.Open();
             jsonSerialController = new JsonSerialController(_serialPort);
             jsonSerialController.ButtonControl["SW1"].SwitchStateChanged += Form1_SwitchStateChanged;

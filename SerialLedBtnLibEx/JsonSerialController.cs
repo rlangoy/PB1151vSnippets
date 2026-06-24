@@ -47,10 +47,10 @@ namespace SerialLedBtnLibEx
     /// </summary>
     public class LedControl
     {
-        private readonly SerialPort _serialPort;
+        private readonly ISerialDataReadWrite _serialPort;
         private bool _suppressUpdates;
 
-        public LedControl(SerialPort serialPort)
+        public LedControl(ISerialDataReadWrite serialPort)
         {
             _serialPort = serialPort;
 
@@ -167,9 +167,9 @@ namespace SerialLedBtnLibEx
     /// </summary>
     public class ButtonControl
     {
-        private readonly SerialPort _serialPort;
+        private readonly ISerialDataReadWrite _serialPort;
 
-        public ButtonControl(SerialPort serialPort)
+        public ButtonControl(ISerialDataReadWrite serialPort)
         {
             _serialPort = serialPort;
             _serialPort.DataReceived += OnDataReceived;
@@ -196,7 +196,7 @@ namespace SerialLedBtnLibEx
         /// </summary>
         public event EventHandler<SwitchEventArgs>? SwitchChanged;
 
-        private void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
+        private void OnDataReceived(object? sender, SerialDataReceivedEventArgs e)
         {
             // ReadExisting can return several lines at once; handle each separately.
             string data = _serialPort.ReadExisting();
@@ -265,16 +265,43 @@ namespace SerialLedBtnLibEx
         }
     }
 
+    public interface ISerialDataReadWrite
+    {
+        void WriteLine(string text);
+        string ReadExisting();
+        event SerialDataReceivedEventHandler DataReceived;
+    }
+
+    // This class inherits from SerialPort and implements ISerialDataReadWrite, so it can be used in place as a SerialPort object
+    public sealed class SerialPortEx : SerialPort, ISerialDataReadWrite
+    {
+        public SerialPortEx()
+        {
+            // Forward the native SerialPort.DataReceived event to ISerialDataReadWrite subscribers.
+            base.DataReceived += (s, e) => _dataReceived?.Invoke(s, e);
+        }
+
+        private SerialDataReceivedEventHandler? _dataReceived;
+
+        event SerialDataReceivedEventHandler ISerialDataReadWrite.DataReceived
+        {
+            add => _dataReceived += value;
+            remove => _dataReceived -= value;
+        }
+    }
+
     /// <summary>
     /// Top-level controller. Owns both the LED (outgoing) and the
     /// button/switch (incoming) sides of the JSON serial protocol.
     /// </summary>
     public class JsonSerialController
     {
-        public JsonSerialController(SerialPort serialPort)
+        //For serial port. Use the class SerialPortEx to implement ISerialDataReadWrite interface.
+        public JsonSerialController(ISerialDataReadWrite serialReadWriter)
         {
-            LedControl = new LedControl(serialPort);
-            ButtonControl = new ButtonControl(serialPort);
+            var port = (ISerialDataReadWrite)serialReadWriter;
+            LedControl    = new LedControl    (port);
+            ButtonControl = new ButtonControl (port);
         }
 
         public LedControl LedControl { get; }

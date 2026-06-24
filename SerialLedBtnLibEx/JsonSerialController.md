@@ -2,7 +2,7 @@
 
 I/O library for the **SerialLedBtnLibEx** example (PB1151, USN).
 
-`JsonSerialController` is a small object-oriented wrapper around a `SerialPort`. It exposes the device as two halves:
+`JsonSerialController` is a small object-oriented wrapper around a serial port (abstracted behind `ISerialDataReadWrite`). It exposes the device as two halves:
 
 - **`LedControl`** — *outgoing*: set an LED value and it is serialized to JSON and written to the port.
 - **`ButtonControl`** — *incoming*: parses JSON arriving from the device and raises C# events when a switch changes.
@@ -16,7 +16,18 @@ classDiagram
     class JsonSerialController {
         +LedControl LedControl
         +ButtonControl ButtonControl
-        +JsonSerialController(SerialPort)
+        +JsonSerialController(object serialReadWriter)
+    }
+
+    class ISerialDataReadWrite {
+        <<interface>>
+        +WriteLine(string) void
+        +ReadExisting() string
+        +event DataReceived
+    }
+
+    class SerialPortEx {
+        forwards SerialPort.DataReceived
     }
 
     class LedControl {
@@ -57,8 +68,9 @@ classDiagram
     JsonSerialController *-- ButtonControl : owns
     LedControl *-- "1..*" LED : owns
     ButtonControl *-- "1..*" Switch : owns
-    LedControl ..> SerialPort : writes JSON
-    ButtonControl ..> SerialPort : reads JSON
+    LedControl ..> ISerialDataReadWrite : writes JSON
+    ButtonControl ..> ISerialDataReadWrite : reads JSON
+    SerialPortEx ..|> ISerialDataReadWrite : implements
     Switch ..> SwitchEventArgs : raises
     ButtonControl ..> SwitchEventArgs : raises
 ```
@@ -67,10 +79,12 @@ classDiagram
 
 | Class | Responsibility |
 |-------|----------------|
-| `JsonSerialController` | Composition root. Constructs and owns `LedControl` and `ButtonControl`, sharing one `SerialPort`. |
+| `JsonSerialController` | Composition root. Takes an `object`, verifies it implements `ISerialDataReadWrite` (else throws `ArgumentException`), then constructs and owns `LedControl` and `ButtonControl`, sharing the one port. |
+| `ISerialDataReadWrite` | Abstraction the controls depend on: `WriteLine`, `ReadExisting`, and a `DataReceived` event. Decouples the library from `System.IO.Ports.SerialPort`. |
+| `SerialPortEx` | A `SerialPort` subclass that implements `ISerialDataReadWrite`, forwarding the native `DataReceived` event. Pass one of these to `JsonSerialController` (a plain `SerialPort` does not implement the interface). |
 | `LedControl` | Owns the four `LED` objects. Serializes their state to JSON and writes it whenever one changes. Provides `AllOn`/`AllOff`. |
 | `LED` | One LED. Holds an `Id` and a `Value`; raises `ValueChanged` only when the value actually changes. |
-| `ButtonControl` | Owns the three `Switch` objects. Listens to `SerialPort.DataReceived`, parses incoming JSON, and updates the matching switch. |
+| `ButtonControl` | Owns the three `Switch` objects. Listens to `ISerialDataReadWrite.DataReceived`, parses incoming JSON, and updates the matching switch. |
 | `Switch` | One pushbutton. Holds an `Id` and `Value`; raises `SwitchStateChanged` (carrying a `SwitchEventArgs`) only when the value changes. |
 | `SwitchEventArgs` | Event payload: which switch (`Id`) and its new `Value`. |
 
@@ -137,23 +151,4 @@ flowchart TD
 - **No event during construction.** Constructors assign the backing field (`_value`) directly, not the property, so `ValueChanged`/`SwitchStateChanged` do not fire while objects are being built.
 - **Indexer lookup by id.** `LedControl["LED1"]` and `ButtonControl["SW1"]` use an indexer that searches by `Id` and throws `KeyNotFoundException` for an unknown id — readable call sites without exposing the list.
 - **Batch updates.** `LedControl` sets a `_suppressUpdates` flag around `AllOn`/`AllOff` so the many `ValueChanged` events collapse into a single serial write (in a `try/finally` so the flag always resets).
-- **Robust parsing.** `ButtonControl` only parses lines containing `"switches"`, wraps deserialization in `try/catch (JsonException)`, and ignores malformed or unknown ids rather than throwing.
-- **Two events on `ButtonControl`.** Subscribe to a *specific* switch via `ButtonControl["SW1"].SwitchStateChanged`, or to *any* switch via `ButtonControl.SwitchChanged` (inspect `SwitchEventArgs.Id`).
-- **Separation of concerns.** Outgoing (LEDs) and incoming (switches) live in separate classes; `JsonSerialController` just composes them over one shared port.
-
-## Usage
-
-```csharp
-var port = new SerialPort("COM3", 9600);
-port.Open();
-var controller = new JsonSerialController(port);
-
-// Outgoing: turn LED1 on
-controller.LedControl["LED1"].Value = 1;
-
-// Incoming: react to SW1
-controller.ButtonControl["SW1"].SwitchStateChanged += (s, e) =>
-{
-    Console.WriteLine($"{e.Id} = {e.Value}");
-};
-```
+- **Robust parsin
