@@ -19,6 +19,7 @@ config:
     nodePlacementStrategy: SIMPLE
 ---
 classDiagram
+direction TB
     class JsonSerialController {
         +LedControl LedControl
         +ButtonControl ButtonControl
