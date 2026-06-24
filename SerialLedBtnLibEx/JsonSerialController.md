@@ -11,76 +11,7 @@ The caller never touches JSON or the raw port directly — only objects, propert
 
 ## Class diagram
 
-```mermaid
----
-config:
-  layout: elk
-  elk:
-    nodePlacementStrategy: SIMPLE
----
-classDiagram
-direction TB
-    class JsonSerialController {
-        +LedControl LedControl
-        +ButtonControl ButtonControl
-        +JsonSerialController(ISerialDataReadWrite serialReadWriter)
-    }
-
-    class ISerialDataReadWrite {
-        <<interface>>
-        +WriteLine(string) void
-        +ReadExisting() string
-        +event DataReceived
-    }
-
-    class SerialPortEx {
-        forwards SerialPort.DataReceived
-    }
-
-    class LedControl {
-        +List~LED~ Leds
-        +LED this[string id]
-        +AllOn() void
-        +AllOff() void
-        +ToJson() string
-        -UpdateOverSerial() void
-    }
-
-    class LED {
-        +string Id
-        +int Value
-        +event ValueChanged
-    }
-
-    class ButtonControl {
-        +List~Switch~ Switches
-        +Switch this[string id]
-        +event SwitchChanged
-        +ProcessLine(string json) void
-        -OnDataReceived(...) void
-    }
-
-    class Switch {
-        +string Id
-        +int Value
-        +event SwitchStateChanged
-    }
-
-    class SwitchEventArgs {
-        +string Id
-        +int Value
-    }
-
-    JsonSerialController *-- LedControl : owns
-    JsonSerialController *-- ButtonControl : owns
-    LedControl *-- "1..*" LED : owns
-    ButtonControl *-- "1..*" Switch : owns
-    LedControl ..> ISerialDataReadWrite : writes JSON
-    ButtonControl ..> ISerialDataReadWrite : reads JSON
-    SerialPortEx ..|> ISerialDataReadWrite : implements
-    Switch ..> SwitchEventArgs : raises
-    ButtonControl ..> SwitchEventArgs : raises
-```
+![Class diagram](Images/Class_Diagrams.svg)
 
 ## Responsibilities
 
