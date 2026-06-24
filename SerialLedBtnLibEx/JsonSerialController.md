@@ -16,7 +16,7 @@ classDiagram
     class JsonSerialController {
         +LedControl LedControl
         +ButtonControl ButtonControl
-        +JsonSerialController(object serialReadWriter)
+        +JsonSerialController(ISerialDataReadWrite serialReadWriter)
     }
 
     class ISerialDataReadWrite {
