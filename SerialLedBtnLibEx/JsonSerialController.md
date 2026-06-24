@@ -151,4 +151,25 @@ flowchart TD
 - **No event during construction.** Constructors assign the backing field (`_value`) directly, not the property, so `ValueChanged`/`SwitchStateChanged` do not fire while objects are being built.
 - **Indexer lookup by id.** `LedControl["LED1"]` and `ButtonControl["SW1"]` use an indexer that searches by `Id` and throws `KeyNotFoundException` for an unknown id — readable call sites without exposing the list.
 - **Batch updates.** `LedControl` sets a `_suppressUpdates` flag around `AllOn`/`AllOff` so the many `ValueChanged` events collapse into a single serial write (in a `try/finally` so the flag always resets).
-- **Robust parsin
+- **Robust parsing.** `ButtonControl` only parses lines containing `"switches"`, wraps deserialization in `try/catch (JsonException)`, and ignores malformed or unknown ids rather than throwing.
+- **Two events on `ButtonControl`.** Subscribe to a *specific* switch via `ButtonControl["SW1"].SwitchStateChanged`, or to *any* switch via `ButtonControl.SwitchChanged` (inspect `SwitchEventArgs.Id`).
+- **Separation of concerns.** Outgoing (LEDs) and incoming (switches) live in separate classes; `JsonSerialController` just composes them over one shared port.
+- **Port abstraction.** The controls depend on `ISerialDataReadWrite`, not on `SerialPort` directly. `SerialPortEx` adapts the framework `SerialPort` to that interface (notably mapping the native `SerialDataReceivedEventHandler` event). This keeps the library testable with a mock port and avoids coupling to `System.IO.Ports`.
+
+## Usage
+
+```csharp
+// SerialPortEx implements ISerialDataReadWrite; a plain SerialPort does not.
+var port = new SerialPortEx { PortName = "COM3", BaudRate = 9600 };
+port.Open();
+var controller = new JsonSerialController(port);
+
+// Outgoing: turn LED1 on
+controller.LedControl["LED1"].Value = 1;
+
+// Incoming: react to SW1
+controller.ButtonControl["SW1"].SwitchStateChanged += (s, e) =>
+{
+    Console.WriteLine($"{e.Id} = {e.Value}");
+};
+```
