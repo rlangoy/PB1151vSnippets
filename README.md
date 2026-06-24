@@ -75,7 +75,7 @@ dotnet run
 
 Or open `SerialLedBtnLibEx.csproj` in Visual Studio and press **F5**.
 
-> **Note:** Edit the COM port in `Form1.cs` (`new SerialPort("COM3", 9600)`) to match the port your board is connected to. Make sure the serial console (e.g. Thonny) is **closed** first — only one program can hold the port at a time.
+> **Note:** Edit the COM port in `Form1.cs` (`new SerialPortEx { PortName = "COM3", BaudRate = 9600 }`) to match the port your board is connected to. Make sure the serial console (e.g. Thonny) is **closed** first — only one program can hold the port at a time.
 
 Toggle the LED checkboxes to drive the LEDs; press the physical switches to see the SW checkboxes update.
 

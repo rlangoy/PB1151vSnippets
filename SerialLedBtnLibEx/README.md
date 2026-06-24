@@ -16,7 +16,7 @@ Each row pairs an **LED** checkbox (output, PC → device) with a **SW** checkbo
 In `Form1_Load` the serial port is opened and handed to the controller. After that, you only ever talk to the controller — never the raw port:
 
 ```csharp
-_serialPort = new SerialPort("COM3", 9600);
+_serialPort = new SerialPortEx { PortName = "COM3", BaudRate = 9600 };
 _serialPort.Open();
 jsonSerialController = new JsonSerialController(_serialPort);
 jsonSerialController.ButtonControl["SW1"].SwitchStateChanged += Form1_SwitchStateChanged;
@@ -24,7 +24,7 @@ jsonSerialController.ButtonControl["SW1"].SwitchStateChanged += Form1_SwitchStat
 
 What each line does:
 
-- **`new SerialPort("COM3", 9600)`** — opens COM3 at 9600 baud. Change `COM3` to match the port your board uses.
+- **`new SerialPortEx { PortName = "COM3", BaudRate = 9600 }`** — opens COM3 at 9600 baud. Change `COM3` to match the port your board uses.
 - **`new JsonSerialController(_serialPort)`** — wraps the port. The controller exposes two helpers: `LedControl` (outgoing) and `ButtonControl` (incoming).
 - **`ButtonControl["SW1"].SwitchStateChanged += ...`** — subscribes to a single switch by name. When `SW1` changes on the hardware, your handler runs. Do the same for `SW2` and `SW3`.
 
