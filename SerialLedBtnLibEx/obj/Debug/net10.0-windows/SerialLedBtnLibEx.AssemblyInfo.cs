@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SerialLedBtnLibEx")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+68e75a4bd4995fc996630790c12e3a6b1bb323bb")]
 [assembly: System.Reflection.AssemblyProductAttribute("SerialLedBtnLibEx")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SerialLedBtnLibEx")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

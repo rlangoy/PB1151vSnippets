@@ -41,7 +41,7 @@
             // checkBox1
             // 
             checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(43, 80);
+            checkBox1.Location = new Point(365, 78);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(82, 19);
             checkBox1.TabIndex = 0;
@@ -63,7 +63,7 @@
             // 
             checkBox2.AutoSize = true;
             checkBox2.Enabled = false;
-            checkBox2.Location = new Point(43, 129);
+            checkBox2.Location = new Point(60, 138);
             checkBox2.Name = "checkBox2";
             checkBox2.Size = new Size(82, 19);
             checkBox2.TabIndex = 2;
@@ -73,7 +73,7 @@
             // checkBox3
             // 
             checkBox3.AutoSize = true;
-            checkBox3.Location = new Point(148, 80);
+            checkBox3.Location = new Point(263, 78);
             checkBox3.Name = "checkBox3";
             checkBox3.Size = new Size(82, 19);
             checkBox3.TabIndex = 4;
@@ -85,7 +85,7 @@
             // 
             checkBox4.AutoSize = true;
             checkBox4.Enabled = false;
-            checkBox4.Location = new Point(148, 129);
+            checkBox4.Location = new Point(165, 138);
             checkBox4.Name = "checkBox4";
             checkBox4.Size = new Size(82, 19);
             checkBox4.TabIndex = 3;
@@ -95,7 +95,7 @@
             // checkBox5
             // 
             checkBox5.AutoSize = true;
-            checkBox5.Location = new Point(246, 79);
+            checkBox5.Location = new Point(165, 78);
             checkBox5.Name = "checkBox5";
             checkBox5.Size = new Size(82, 19);
             checkBox5.TabIndex = 6;
@@ -107,7 +107,7 @@
             // 
             checkBox6.AutoSize = true;
             checkBox6.Enabled = false;
-            checkBox6.Location = new Point(246, 129);
+            checkBox6.Location = new Point(263, 138);
             checkBox6.Name = "checkBox6";
             checkBox6.Size = new Size(82, 19);
             checkBox6.TabIndex = 5;
@@ -117,7 +117,7 @@
             // checkBox7
             // 
             checkBox7.AutoSize = true;
-            checkBox7.Location = new Point(354, 79);
+            checkBox7.Location = new Point(60, 78);
             checkBox7.Name = "checkBox7";
             checkBox7.Size = new Size(82, 19);
             checkBox7.TabIndex = 8;

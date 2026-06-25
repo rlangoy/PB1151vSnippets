@@ -8,8 +8,6 @@ namespace SerialLedBtnLibEx
     {
         JsonSerialController jsonSerialController;
 
-        private SerialPortEx _serialPort;
-
         public Form1()
         {
             InitializeComponent();
@@ -17,7 +15,7 @@ namespace SerialLedBtnLibEx
 
 
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
             //Set up GUI
             checkBox1.Text = "LED1";
@@ -28,13 +26,21 @@ namespace SerialLedBtnLibEx
             checkBox6.Text = "SW3";
             checkBox7.Text = "LED4";
 
-            _serialPort = new SerialPortEx { PortName = "COM3", BaudRate = 9600 };
-            _serialPort.Open();
-            jsonSerialController = new JsonSerialController(_serialPort);
+            // Connect over BLE (Nordic UART Service) instead of the wired COM port.
+            // The device name must match the peripheral's advertised name.
+            //BleNusEx _serialDev = new BleNusEx("Pico-NUS");
+            //await _serialDev.ConnectAsync(TimeSpan.FromSeconds(15));
+
+            // Connect using USB CDC-ACM (Communications Device Class - Abstract Control Model) ( USB <-> RS232 )
+            // PortName = Windows Serial Por nr , BaudRate = Transfer Speed
+            SerialPortEx _serialDev = new SerialPortEx { PortName = "COM3", BaudRate = 115200 };
+            _serialDev.Open();
+
+            // _serialDev implements ISerialDataReadWrite, so it drops straight into the JsonSerialController.
+            jsonSerialController = new JsonSerialController(_serialDev);
             jsonSerialController.ButtonControl["SW1"].SwitchStateChanged += Form1_SwitchStateChanged;
             jsonSerialController.ButtonControl["SW2"].SwitchStateChanged += Form1_SwitchStateChanged;
             jsonSerialController.ButtonControl["SW3"].SwitchStateChanged += Form1_SwitchStateChanged;
-
         }
         // Husk:
         // Nå er vi i serie-port tråden (bakgrunnstråden til serieportens datamotaks tråd)

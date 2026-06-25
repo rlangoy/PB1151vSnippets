@@ -106,7 +106,7 @@ namespace SerialLedBtnLibEx
         {
             string json = ToJson();
             _serialPort.WriteLine(json);
-            System.Diagnostics.Debug.WriteLine($"LedControl::UpdateOverSerial() -> RS232: {json}");
+            System.Diagnostics.Debug.WriteLine($"LedControl::UpdateOverSerial() -> {json}");
         }
     }
 
