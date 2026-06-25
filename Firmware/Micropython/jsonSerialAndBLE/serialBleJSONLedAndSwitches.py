@@ -165,6 +165,7 @@ def readSerialLine():
     Reads all currently-available bytes without blocking, buffering until a
     newline arrives, then returns the completed line.
     """
+    global _serial_buf
     # Drain everything the OS has buffered right now.
     while _poll.poll(0):
         ch = _stdin.read(1)
@@ -173,7 +174,7 @@ def readSerialLine():
         _serial_buf.extend(ch)
         if ch == b"\n":
             line = _serial_buf[:-1].rstrip(b"\r")
-            del _serial_buf[:]
+            _serial_buf = bytearray()
             try:
                 return line.decode().strip()
             except Exception:
