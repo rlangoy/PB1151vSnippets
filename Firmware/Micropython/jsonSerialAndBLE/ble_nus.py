@@ -245,7 +245,7 @@ class BLENUS:
             # Never let a callback error kill the BLE IRQ.
             print('{"ERROR": "on_rx callback raised: %s"}' % e)
 
-    def _advertise(self, interval_us=500_000):
+    def _advertise(self, interval_us=50_000):
         self._ble.gap_advertise(
             interval_us,
             adv_data=self._adv_payload,
