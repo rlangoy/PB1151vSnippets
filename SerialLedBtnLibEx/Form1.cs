@@ -28,13 +28,14 @@ namespace SerialLedBtnLibEx
 
             // Connect over BLE (Nordic UART Service) instead of the wired COM port.
             // The device name must match the peripheral's advertised name.
-            //BleNusEx _serialDev = new BleNusEx("Pico-NUS");
-            //await _serialDev.ConnectAsync(TimeSpan.FromSeconds(15));
+            BleNusEx _serialDev = new BleNusEx("Pico-NUS");
+            await _serialDev.ConnectAsync(TimeSpan.FromSeconds(15));
 
             // Connect using USB CDC-ACM (Communications Device Class - Abstract Control Model) ( USB <-> RS232 )
             // PortName = Windows Serial Por nr , BaudRate = Transfer Speed
-            SerialPortEx _serialDev = new SerialPortEx { PortName = "COM3", BaudRate = 115200 };
-            _serialDev.Open();
+            
+            //SerialPortEx _serialDev = new SerialPortEx { PortName = "COM3", BaudRate = 115200 };
+            //_serialDev.Open();
 
             // _serialDev implements ISerialDataReadWrite, so it drops straight into the JsonSerialController.
             jsonSerialController = new JsonSerialController(_serialDev);
