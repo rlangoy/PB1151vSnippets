@@ -7,6 +7,10 @@ import json
 
 from ble_nus import BLENUS   # BLE Nordic UART Service transport (see ble_nus.py)
 
+# ---- BLE NUS transport ---------------------------------------------------
+# on_rx is wired up after the JSON handler is defined (see below).
+ble = BLENUS(name="Pico-NUS")
+
 ''' Serial + BLE (NUS) JSON LED control + switch status reporting.
 
     The same JSON protocol works over the USB serial console AND over a BLE
@@ -41,11 +45,6 @@ sitches = {
    "SW2" : Pin(11, Pin.IN, Pin.PULL_DOWN),
    "SW3" : Pin(12, Pin.IN, Pin.PULL_DOWN),
 }
-
-
-# ---- BLE NUS transport ---------------------------------------------------
-# on_rx is wired up after the JSON handler is defined (see below).
-ble = BLENUS(name="Pico-NUS")
 
 
 def emit(msg):
