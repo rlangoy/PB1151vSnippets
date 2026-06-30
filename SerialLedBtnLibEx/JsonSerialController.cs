@@ -111,6 +111,146 @@ namespace SerialLedBtnLibEx
     }
 
     /// <summary>
+    /// A single servo with a target angle in degrees (0-180).
+    /// Raises <see cref="ValueChanged"/> only when the (clamped) angle changes.
+    /// </summary>
+    public class Servo
+    {
+        private int _angle;
+
+        public Servo(string id, int angle = 0)
+        {
+            Id = id;
+            _angle = Clamp(angle); // set the field directly so the event does not fire during construction
+        }
+
+        [JsonPropertyName("id")]
+        public string Id { get; }
+
+        [JsonPropertyName("angle")]
+        public int Angle
+        {
+            get => _angle;
+            set
+            {
+                int clamped = Clamp(value);
+                if (_angle == clamped)
+                    return; // no change (incl. out-of-range that clamps to current) -> no traffic
+
+                _angle = clamped;
+                ValueChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        public event EventHandler? ValueChanged;
+
+        private static int Clamp(int angle) => Math.Clamp(angle, 0, 180);
+    }
+
+    /// <summary>
+    /// Owns a fixed set of servos and pushes angle / release commands to the
+    /// device as JSON. Mirrors the device-side "servos" protocol:
+    /// <code>
+    /// {"servos": [{"id": "SV1", "angle": 90}]}
+    /// {"servos": [{"id": "SV1", "action": "release"}]}
+    /// </code>
+    /// </summary>
+    public class ServoControl
+    {
+        private readonly ISerialDataReadWrite _serialPort;
+        private bool _suppressUpdates;
+
+        public ServoControl(ISerialDataReadWrite serialPort)
+        {
+            _serialPort = serialPort;
+
+            foreach (Servo servo in Servos)
+                servo.ValueChanged += OnServoValueChanged;
+        }
+
+        [JsonPropertyName("servos")]
+        public List<Servo> Servos { get; } = new()
+        {
+            new Servo("SV1"),
+        };
+
+        /// <summary>Indexer access, e.g. <c>control["SV1"].Angle = 90;</c></summary>
+        public Servo this[string id] =>
+            Servos.FirstOrDefault(servo => servo.Id == id)
+            ?? throw new KeyNotFoundException($"No servo with id '{id}'.");
+
+        /// <summary>Full snapshot of every servo as an angle message.</summary>
+        public string ToJson() => JsonSerializer.Serialize(this);
+
+        /// <summary>Centre all servos (90 deg).</summary>
+        public void Center() => SetAll(90);
+
+        /// <summary>Move every servo to the same angle, then send one combined update.</summary>
+        public void SetAll(int angle)
+        {
+            _suppressUpdates = true;
+            try
+            {
+                foreach (Servo servo in Servos)
+                    servo.Angle = angle;
+            }
+            finally
+            {
+                _suppressUpdates = false;
+            }
+
+            SendServos(Servos);
+        }
+
+        /// <summary>
+        /// Release a servo so it stops holding torque (drops jitter/heat when idle).
+        /// The device re-attaches automatically on the servo's next angle command.
+        /// </summary>
+        public void Release(string id) => Release(this[id]);
+
+        public void Release(Servo servo)
+        {
+            // Release is an action, not a position, so it is sent on its own
+            // rather than as part of the angle snapshot.
+            string json = JsonSerializer.Serialize(new
+            {
+                servos = new[] { new { id = servo.Id, action = "release" } }
+            });
+            Write(json);
+        }
+
+        private void OnServoValueChanged(object? sender, EventArgs e)
+        {
+            if (_suppressUpdates)
+                return;
+
+            // Send only the servo that changed, so releasing one servo is not
+            // undone by re-commanding the others back to their last angle.
+            if (sender is Servo servo)
+                SendServos(new List<Servo> { servo });
+        }
+
+        private void SendServos(IEnumerable<Servo> servos)
+        {
+            string json = JsonSerializer.Serialize(new ServoMessage { Servos = servos.ToList() });
+            Write(json);
+        }
+
+        private void Write(string json)
+        {
+            _serialPort.WriteLine(json);
+            System.Diagnostics.Debug.WriteLine($"ServoControl::Write() -> {json}");
+        }
+
+        // DTO used only for serializing outgoing angle messages.
+        private class ServoMessage
+        {
+            [JsonPropertyName("servos")]
+            public List<Servo> Servos { get; set; } = new();
+        }
+    }
+
+    /// <summary>
     /// Event data for a switch value change.
     /// </summary>
     public class SwitchEventArgs : EventArgs
@@ -291,7 +431,7 @@ namespace SerialLedBtnLibEx
     }
 
     /// <summary>
-    /// Top-level controller. Owns both the LED (outgoing) and the
+    /// Top-level controller. Owns the LED and servo (outgoing) and the
     /// button/switch (incoming) sides of the JSON serial protocol.
     /// </summary>
     public class JsonSerialController
@@ -300,11 +440,14 @@ namespace SerialLedBtnLibEx
         public JsonSerialController(ISerialDataReadWrite serialReadWriter)
         {
             var port = (ISerialDataReadWrite)serialReadWriter;
-            LedControl    = new LedControl    (port);
-            ButtonControl = new ButtonControl (port);
+            LedControl = new LedControl(port);
+            ServoControl = new ServoControl(port);
+            ButtonControl = new ButtonControl(port);
         }
 
         public LedControl LedControl { get; }
+
+        public ServoControl ServoControl { get; }
 
         public ButtonControl ButtonControl { get; }
     }

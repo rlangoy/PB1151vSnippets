@@ -36,6 +36,12 @@
             checkBox5 = new CheckBox();
             checkBox6 = new CheckBox();
             checkBox7 = new CheckBox();
+            trackBar1 = new TrackBar();
+            label2 = new Label();
+            textBox1 = new TextBox();
+            groupBox1 = new GroupBox();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
+            groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // checkBox1
@@ -125,11 +131,52 @@
             checkBox7.UseVisualStyleBackColor = true;
             checkBox7.CheckedChanged += checkBox7_CheckedChanged;
             // 
+            // trackBar1
+            // 
+            trackBar1.Location = new Point(42, 68);
+            trackBar1.Maximum = 180;
+            trackBar1.Name = "trackBar1";
+            trackBar1.Size = new Size(298, 45);
+            trackBar1.TabIndex = 9;
+            trackBar1.TickFrequency = 10;
+            trackBar1.Scroll += trackBar1_Scroll;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(95, 39);
+            label2.Name = "label2";
+            label2.Size = new Size(38, 15);
+            label2.TabIndex = 10;
+            label2.Text = "Angle";
+            // 
+            // textBox1
+            // 
+            textBox1.Enabled = false;
+            textBox1.Font = new Font("Segoe UI", 16F, FontStyle.Bold, GraphicsUnit.Pixel);
+            textBox1.Location = new Point(150, 31);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(100, 29);
+            textBox1.TabIndex = 11;
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(label2);
+            groupBox1.Controls.Add(textBox1);
+            groupBox1.Controls.Add(trackBar1);
+            groupBox1.Location = new Point(52, 171);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(395, 122);
+            groupBox1.TabIndex = 12;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Servo SV1 Control";
+            groupBox1.Enter += groupBox1_Enter;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(503, 220);
+            ClientSize = new Size(503, 305);
             Controls.Add(checkBox7);
             Controls.Add(checkBox5);
             Controls.Add(checkBox6);
@@ -138,9 +185,13 @@
             Controls.Add(checkBox2);
             Controls.Add(label1);
             Controls.Add(checkBox1);
+            Controls.Add(groupBox1);
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
+            ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -155,5 +206,9 @@
         private CheckBox checkBox5;
         private CheckBox checkBox6;
         private CheckBox checkBox7;
+        private TrackBar trackBar1;
+        private Label label2;
+        private TextBox textBox1;
+        private GroupBox groupBox1;
     }
 }
