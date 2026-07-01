@@ -12,7 +12,7 @@ The caller never touches JSON or the raw port directly — only objects, propert
 
 ## Class diagram
 
-![Class diagram](Images/Class_Diagrams.svg)
+![Class diagram](Images/ClassDiagram.svg)
 
 ## Responsibilities
 
