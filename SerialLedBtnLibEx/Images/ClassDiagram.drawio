@@ -1,6 +1,6 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.1.2 Chrome/106.0.5249.199 Electron/21.4.3 Safari/537.36" modified="2026-07-01T12:50:47.637Z" version="21.1.2" etag="jrpxc1HaTUJ_w8hy1U6o" type="device">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.1.2 Chrome/106.0.5249.199 Electron/21.4.3 Safari/537.36" modified="2026-07-01T13:07:29.499Z" etag="jDDTA2Orf-yjgwUT06As" version="21.1.2" type="device">
   <diagram name="JsonSerialController" id="jsonSerialController">
-    <mxGraphModel dx="1978" dy="1009" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1850" pageHeight="900" math="0" shadow="0">
+    <mxGraphModel dx="2341" dy="1126" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1850" pageHeight="900" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -14,7 +14,7 @@
           <mxGeometry x="910" y="220" width="280" height="380" as="geometry" />
         </mxCell>
         <mxCell id="pkg_tr" value="&amp;nbsp; Transport" style="rounded=1;arcSize=4;html=1;verticalAlign=top;align=left;fontStyle=1;fontSize=13;fillColor=#FDF0E3;strokeColor=#E67E22;fontColor=#E67E22;dashed=0;spacingTop=4;" parent="1" vertex="1">
-          <mxGeometry x="1260" y="220" width="470" height="300" as="geometry" />
+          <mxGeometry x="355" y="950" width="470" height="270" as="geometry" />
         </mxCell>
         <mxCell id="jsc" value="JsonSerialController" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#37474F;strokeColor=#263238;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="440" y="30" width="300" height="120" as="geometry" />
@@ -59,22 +59,22 @@
           <mxGeometry y="30" width="200" height="60" as="geometry" />
         </mxCell>
         <mxCell id="serialPortEx" value="SerialPortEx" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#E67E22;strokeColor=#B35F13;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
-          <mxGeometry x="1290" y="255" width="180" height="70" as="geometry" />
+          <mxGeometry x="385" y="985" width="180" height="70" as="geometry" />
         </mxCell>
         <mxCell id="serialPortEx_m" value="+SerialPortEx()" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="serialPortEx" vertex="1">
           <mxGeometry y="30" width="180" height="40" as="geometry" />
         </mxCell>
         <mxCell id="serialPort" value="&lt;i&gt;«external»&lt;/i&gt;&lt;br&gt;SerialPort" style="swimlane;rounded=1;arcSize=6;html=1;startSize=44;fillColor=#E67E22;strokeColor=#B35F13;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
-          <mxGeometry x="1305" y="390" width="150" height="70" as="geometry" />
+          <mxGeometry x="400" y="1120" width="150" height="70" as="geometry" />
         </mxCell>
         <mxCell id="bleNusEx" value="BleNusEx" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#E67E22;strokeColor=#B35F13;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
-          <mxGeometry x="1500" y="255" width="200" height="205" as="geometry" />
+          <mxGeometry x="595" y="985" width="200" height="205" as="geometry" />
         </mxCell>
         <mxCell id="bleNusEx_m" value="-string _deviceName&lt;br&gt;-StringBuilder _rxBuffer&lt;br&gt;+IsConnected : bool&lt;hr size=&gt;+ConnectAsync(timeout) : Task&lt;br&gt;+SendAsync(text) : Task&lt;br&gt;+DisposeAsync() : ValueTask&lt;hr size=&gt;+DataReceived : event&lt;br&gt;+ConnectionChanged : event" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="bleNusEx" vertex="1">
           <mxGeometry y="30" width="200" height="175" as="geometry" />
         </mxCell>
         <mxCell id="iface" value="&lt;i&gt;«interface»&lt;/i&gt;&lt;br&gt;ISerialDataReadWrite" style="swimlane;rounded=1;arcSize=6;html=1;startSize=44;fillColor=#C0392B;strokeColor=#7B241C;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
-          <mxGeometry x="690" y="720" width="300" height="130" as="geometry" />
+          <mxGeometry x="440" y="720" width="300" height="130" as="geometry" />
         </mxCell>
         <mxCell id="iface_m" value="+WriteLine(text) : void&lt;br&gt;+ReadExisting() : string&lt;br&gt;+DataReceived : event" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="iface" vertex="1">
           <mxGeometry y="44" width="300" height="86" as="geometry" />
@@ -106,36 +106,43 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e8" value="Writes JSON" style="endArrow=open;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#432D57;fontColor=#1B998B;fillColor=#76608a;strokeWidth=3;" parent="1" source="ledControl" target="iface" edge="1">
-          <mxGeometry x="0.7872" y="-40" relative="1" as="geometry">
+        <mxCell id="e8" value="Writes JSON" style="endArrow=open;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;fontColor=#000000;fillColor=#76608a;strokeWidth=3;entryX=1;entryY=0.308;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="ledControl" target="iface" edge="1">
+          <mxGeometry x="0.8572" y="10" relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="790" y="330" />
+              <mxPoint x="790" y="760" />
             </Array>
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e9" value="Writes JSON" style="endArrow=open;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#050505;fontColor=#2E86C1;entryX=0.567;entryY=0.015;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=3;" parent="1" source="servoControl" target="iface" edge="1">
-          <mxGeometry x="0.7726" y="40" relative="1" as="geometry">
+        <mxCell id="e9" value="Writes JSON" style="endArrow=open;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#050505;fontColor=#000000;entryX=0.997;entryY=0.64;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=3;" parent="1" source="servoControl" target="iface_m" edge="1">
+          <mxGeometry x="0.8492" y="11" relative="1" as="geometry">
             <mxPoint x="860" y="750" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="860" y="335" />
+              <mxPoint x="850" y="335" />
+              <mxPoint x="850" y="819" />
             </Array>
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e11" value="implements" style="endArrow=block;endFill=0;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;fontColor=#E67E22;strokeWidth=3;" parent="1" source="serialPortEx" target="iface" edge="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="e11" value="implements" style="endArrow=block;endFill=0;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;fontColor=#000000;strokeWidth=3;entryX=0.22;entryY=0.965;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="serialPortEx" target="iface_m" edge="1">
+          <mxGeometry x="0.5469" y="-34" relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="1230" y="290" />
-              <mxPoint x="1230" y="770" />
+              <mxPoint x="475" y="910" />
+              <mxPoint x="506" y="910" />
             </Array>
+            <mxPoint x="520" y="890" as="sourcePoint" />
+            <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e12" value="implements" style="endArrow=block;endFill=0;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;fontColor=#E67E22;strokeWidth=3;" parent="1" source="bleNusEx" target="iface" edge="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="e12" value="implements" style="endArrow=block;endFill=0;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;fontColor=#000000;strokeWidth=3;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" parent="1" source="bleNusEx" target="iface_m" edge="1">
+          <mxGeometry x="-0.0303" y="-22" relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="1600" y="810" />
+              <mxPoint x="695" y="910" />
+              <mxPoint x="665" y="910" />
             </Array>
+            <mxPoint x="910" y="930" as="targetPoint" />
+            <mxPoint x="10" y="2" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="e13" value="" style="endArrow=block;endFill=0;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E67E22;" parent="1" source="serialPortEx" target="serialPort" edge="1">
