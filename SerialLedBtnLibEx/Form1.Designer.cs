@@ -164,7 +164,7 @@
             groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(textBox1);
             groupBox1.Controls.Add(trackBar1);
-            groupBox1.Location = new Point(52, 171);
+            groupBox1.Location = new Point(490, 65);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(395, 122);
             groupBox1.TabIndex = 12;
@@ -176,7 +176,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(503, 305);
+            ClientSize = new Size(932, 223);
             Controls.Add(checkBox7);
             Controls.Add(checkBox5);
             Controls.Add(checkBox6);
