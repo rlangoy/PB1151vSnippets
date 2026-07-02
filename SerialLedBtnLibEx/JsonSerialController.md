@@ -22,15 +22,13 @@ The caller never touches JSON or the raw port directly — only objects, propert
 | `ISerialDataReadWrite` | Abstraction the controls depend on: `WriteLine`, `ReadExisting`, and a `DataReceived` event. Decouples the library from any one transport. |
 | `SerialPortEx` | A `SerialPort` subclass that implements `ISerialDataReadWrite`, forwarding the native `DataReceived` event. Pass one of these to `JsonSerialController` (a plain `SerialPort` does not implement the interface). |
 | `BleNusEx` | A BLE alternative to `SerialPortEx`. Scans for and connects to a peripheral exposing the Nordic UART Service (NUS), and implements `ISerialDataReadWrite` over it, so `JsonSerialController` can use it exactly like a serial port. |
-| `NusDataReceivedEventArgs` | Event payload for `BleNusEx.DataReceived`: the decoded text received over BLE. |
-| `BleConnectionException` | Thrown by `BleNusEx` when a scan or connection attempt fails (radio off, device not found, GATT error, etc.). |
 | `LedControl` | Owns the four `LED` objects. Serializes their state to JSON and writes it whenever one changes. Provides `AllOn`/`AllOff`. |
 | `LED` | One LED. Holds an `Id` and a `Value`; raises `ValueChanged` only when the value actually changes. |
 | `ServoControl` | Owns the servo object(s) (currently `SV1`). Serializes an angle change to JSON and writes it; sends a `release` action on its own. Provides `Center`/`SetAll`. |
 | `Servo` | One servo. Holds an `Id` and an `Angle` (clamped to 0–180); raises `ValueChanged` only when the clamped angle actually changes. |
 | `ButtonControl` | Owns the three `Switch` objects. Listens to `ISerialDataReadWrite.DataReceived`, parses incoming JSON, and updates the matching switch. |
 | `Switch` | One pushbutton. Holds an `Id` and `Value`; raises `SwitchStateChanged` (carrying a `SwitchEventArgs`) only when the value changes. |
-| `SwitchEventArgs` | Event payload: which switch (`Id`) and its new `Value`. |
+
 
 ## JSON protocol
 
