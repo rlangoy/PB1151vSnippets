@@ -1,6 +1,6 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.1.2 Chrome/106.0.5249.199 Electron/21.4.3 Safari/537.36" modified="2026-07-02T06:35:40.503Z" etag="XN3B2h6Wx87OQ5fH0XUf" version="21.1.2" type="device">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.1.2 Chrome/106.0.5249.199 Electron/21.4.3 Safari/537.36" modified="2026-07-02T06:48:47.654Z" etag="CYc7ZBo2MXgd478PVc_5" version="21.1.2" type="device">
   <diagram name="JsonSerialController" id="jsonSerialController">
-    <mxGraphModel dx="2658" dy="1396" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1850" pageHeight="900" math="0" shadow="0">
+    <mxGraphModel dx="1418" dy="940" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1850" pageHeight="900" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -67,7 +67,7 @@
         <mxCell id="serialPort" value="&lt;i&gt;«external»&lt;/i&gt;&lt;br&gt;SerialPort" style="swimlane;rounded=1;arcSize=6;html=1;startSize=44;fillColor=#E67E22;strokeColor=#B35F13;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="272.5" y="1100" width="295" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="gOOf8ATfnfssxRY5jCzc-1" value="&lt;hr&gt;&lt;font style=&quot;font-size: 11px;&quot;&gt;+SerialPort(&lt;span style=&quot;color: rgb(0, 0, 0); font-family: &amp;quot;Cascadia Mono&amp;quot;; background-color: initial;&quot;&gt;PortName:string&lt;/span&gt;&lt;span style=&quot;color: rgb(0, 0, 0); font-family: &amp;quot;Cascadia Mono&amp;quot;; background-color: initial;&quot;&gt;,BaudRate:int&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;)&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;/span&gt;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" vertex="1" parent="serialPort">
+        <mxCell id="gOOf8ATfnfssxRY5jCzc-1" value="&lt;hr&gt;&lt;font style=&quot;font-size: 11px;&quot;&gt;+SerialPort(&lt;span style=&quot;color: rgb(0, 0, 0); font-family: &amp;quot;Cascadia Mono&amp;quot;; background-color: initial;&quot;&gt;PortName:string&lt;/span&gt;&lt;span style=&quot;color: rgb(0, 0, 0); font-family: &amp;quot;Cascadia Mono&amp;quot;; background-color: initial;&quot;&gt;,BaudRate:int&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;)&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;/span&gt;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="serialPort" vertex="1">
           <mxGeometry y="40" width="290" height="60" as="geometry" />
         </mxCell>
         <mxCell id="bleNusEx" value="BleNusEx" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#E67E22;strokeColor=#B35F13;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
