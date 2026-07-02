@@ -1,6 +1,6 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.1.2 Chrome/106.0.5249.199 Electron/21.4.3 Safari/537.36" modified="2026-07-01T13:07:29.499Z" etag="jDDTA2Orf-yjgwUT06As" version="21.1.2" type="device">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.1.2 Chrome/106.0.5249.199 Electron/21.4.3 Safari/537.36" modified="2026-07-02T06:35:40.503Z" etag="XN3B2h6Wx87OQ5fH0XUf" version="21.1.2" type="device">
   <diagram name="JsonSerialController" id="jsonSerialController">
-    <mxGraphModel dx="2341" dy="1126" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1850" pageHeight="900" math="0" shadow="0">
+    <mxGraphModel dx="2658" dy="1396" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1850" pageHeight="900" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -14,91 +14,100 @@
           <mxGeometry x="910" y="220" width="280" height="380" as="geometry" />
         </mxCell>
         <mxCell id="pkg_tr" value="&amp;nbsp; Transport" style="rounded=1;arcSize=4;html=1;verticalAlign=top;align=left;fontStyle=1;fontSize=13;fillColor=#FDF0E3;strokeColor=#E67E22;fontColor=#E67E22;dashed=0;spacingTop=4;" parent="1" vertex="1">
-          <mxGeometry x="355" y="950" width="470" height="270" as="geometry" />
+          <mxGeometry x="230" y="950" width="710" height="280" as="geometry" />
         </mxCell>
         <mxCell id="jsc" value="JsonSerialController" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#37474F;strokeColor=#263238;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="440" y="30" width="300" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="jsc_m" value="+LedControl : LedControl&lt;br&gt;+ServoControl : ServoControl&lt;br&gt;+ButtonControl : ButtonControl&lt;hr size=&gt;+JsonSerialController(serialReadWriter)" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="jsc" vertex="1">
+        <mxCell id="jsc_m" value="+LedControl&amp;nbsp; &amp;nbsp; &amp;nbsp;:LedControl&lt;br&gt;+ServoControl&amp;nbsp; :ServoControl&lt;br&gt;+ButtonControl :ButtonControl&lt;hr size=&quot;&quot;&gt;+JsonSerialController( :ISerialDataReadWrite&amp;nbsp;)" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="jsc" vertex="1">
           <mxGeometry y="30" width="300" height="90" as="geometry" />
         </mxCell>
         <mxCell id="buttonControl" value="ButtonControl" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#6A4C93;strokeColor=#4A356B;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
-          <mxGeometry x="70" y="255" width="240" height="125" as="geometry" />
+          <mxGeometry x="70" y="255" width="240" height="135" as="geometry" />
         </mxCell>
-        <mxCell id="buttonControl_m" value="-ISerialDataReadWrite _serialPort&lt;br&gt;+Switches : List&amp;lt;Switch&amp;gt;&lt;br&gt;+this[id] Switch&lt;br&gt;+SwitchChanged : event&lt;hr size=&gt;+ProcessLine(json) : void" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="buttonControl" vertex="1">
-          <mxGeometry y="30" width="240" height="95" as="geometry" />
-        </mxCell>
-        <mxCell id="switchCls" value="Switch" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#6A4C93;strokeColor=#4A356B;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
-          <mxGeometry x="90" y="440" width="200" height="90" as="geometry" />
-        </mxCell>
-        <mxCell id="switchCls_m" value="+Id : string&lt;br&gt;+Value : int&lt;br&gt;+SwitchStateChanged : event" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="switchCls" vertex="1">
-          <mxGeometry y="30" width="200" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="ledControl" value="LedControl" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#1B998B;strokeColor=#12766B;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
-          <mxGeometry x="470" y="255" width="240" height="150" as="geometry" />
-        </mxCell>
-        <mxCell id="ledControl_m" value="-ISerialDataReadWrite _serialPort&lt;br&gt;-bool _suppressUpdates&lt;br&gt;+Leds : List&amp;lt;LED&amp;gt;&lt;br&gt;+this[id] LED&lt;hr size=&gt;+AllOn() : void&lt;br&gt;+AllOff() : void&lt;br&gt;+ToJson() : string" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="ledControl" vertex="1">
-          <mxGeometry y="30" width="240" height="120" as="geometry" />
-        </mxCell>
-        <mxCell id="led" value="LED" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#1B998B;strokeColor=#12766B;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
-          <mxGeometry x="490" y="470" width="200" height="90" as="geometry" />
-        </mxCell>
-        <mxCell id="led_m" value="+Id : string&lt;br&gt;+Value : int&lt;br&gt;+ValueChanged : event" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="led" vertex="1">
-          <mxGeometry y="30" width="200" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="servoControl" value="ServoControl" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#2E86C1;strokeColor=#1F5F8B;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
-          <mxGeometry x="930" y="255" width="240" height="160" as="geometry" />
-        </mxCell>
-        <mxCell id="servoControl_m" value="-ISerialDataReadWrite _serialPort&lt;br&gt;-bool _suppressUpdates&lt;br&gt;+Servos : List&amp;lt;Servo&amp;gt;&lt;br&gt;+this[id] Servo&lt;hr size=&gt;+Center() : void&lt;br&gt;+SetAll(angle) : void&lt;br&gt;+Release(id) : void&lt;br&gt;+ToJson() : string" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="servoControl" vertex="1">
+        <mxCell id="buttonControl_m" value="-_serialPort :ISerialDataReadWrite&lt;br&gt;+Switches : List&amp;lt;Switch&amp;gt;&lt;br&gt;+this[id] Switch&lt;br&gt;&lt;hr size=&quot;&quot;&gt;+ButtonControl( :ISerialDataReadWrite )&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;br&gt;+SwitchChanged : event" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="buttonControl" vertex="1">
           <mxGeometry y="30" width="240" height="130" as="geometry" />
         </mxCell>
-        <mxCell id="servo" value="Servo" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#2E86C1;strokeColor=#1F5F8B;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
-          <mxGeometry x="950" y="470" width="200" height="90" as="geometry" />
+        <mxCell id="switchCls" value="Switch" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#6A4C93;strokeColor=#4A356B;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
+          <mxGeometry x="90" y="470" width="200" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="servo_m" value="+Id : string&lt;br&gt;+Angle : int&lt;br&gt;+ValueChanged : event" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="servo" vertex="1">
-          <mxGeometry y="30" width="200" height="60" as="geometry" />
+        <mxCell id="switchCls_m" value="&lt;hr&gt;+Id :string&lt;br&gt;+Value :int&lt;br&gt;+SwitchStateChanged :event" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="switchCls" vertex="1">
+          <mxGeometry y="30" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="ledControl" value="LedControl" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#1B998B;strokeColor=#12766B;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
+          <mxGeometry x="470" y="255" width="240" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="ledControl_m" value="-_serialPort :ISerialDataReadWrite&lt;br&gt;+Leds :List&amp;lt;LED&amp;gt;&lt;br&gt;+this[id] LED&lt;hr size=&quot;&quot;&gt;+LedControl( :ISerialDataReadWrite )&amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;br&gt;+AllOn()&amp;nbsp; &amp;nbsp;: void&lt;br&gt;+AllOff()&amp;nbsp; &amp;nbsp; : void&lt;br&gt;+ToJson() : string" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="ledControl" vertex="1">
+          <mxGeometry y="30" width="240" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="led" value="LED" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#1B998B;strokeColor=#12766B;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
+          <mxGeometry x="490" y="480" width="200" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="led_m" value="&lt;hr&gt;+Id :string&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;br&gt;+Value :int&lt;br&gt;+ValueChanged :event" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="led" vertex="1">
+          <mxGeometry y="20" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="servoControl" value="ServoControl" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#2E86C1;strokeColor=#1F5F8B;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
+          <mxGeometry x="930" y="255" width="240" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="servoControl_m" value="-_serialPort :ISerialDataReadWrite&lt;br&gt;+Servos :List&amp;lt;Servo&amp;gt;&lt;br&gt;+this[id] Servo&lt;hr size=&quot;&quot;&gt;+ServoControl( :ISerialDataReadWrite )&amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;br&gt;+Center() :void&lt;br&gt;+SetAll(angle) :void&lt;br&gt;+Release(id) :void&lt;br&gt;+ToJson() :string" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="servoControl" vertex="1">
+          <mxGeometry y="30" width="240" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="servo" value="Servo" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#2E86C1;strokeColor=#1F5F8B;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
+          <mxGeometry x="950" y="480" width="200" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="servo_m" value="&lt;hr&gt;+Id :string&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;br&gt;+Angle :int&lt;br&gt;+ValueChanged :event" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="servo" vertex="1">
+          <mxGeometry y="20" width="200" height="70" as="geometry" />
         </mxCell>
         <mxCell id="serialPortEx" value="SerialPortEx" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#E67E22;strokeColor=#B35F13;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
-          <mxGeometry x="385" y="985" width="180" height="70" as="geometry" />
+          <mxGeometry x="330" y="985" width="180" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="serialPortEx_m" value="+SerialPortEx()" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="serialPortEx" vertex="1">
-          <mxGeometry y="30" width="180" height="40" as="geometry" />
+        <mxCell id="serialPortEx_m" value="&lt;hr&gt;+SerialPortEx()&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="serialPortEx" vertex="1">
+          <mxGeometry y="20" width="180" height="50" as="geometry" />
         </mxCell>
         <mxCell id="serialPort" value="&lt;i&gt;«external»&lt;/i&gt;&lt;br&gt;SerialPort" style="swimlane;rounded=1;arcSize=6;html=1;startSize=44;fillColor=#E67E22;strokeColor=#B35F13;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
-          <mxGeometry x="400" y="1120" width="150" height="70" as="geometry" />
+          <mxGeometry x="272.5" y="1100" width="295" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="gOOf8ATfnfssxRY5jCzc-1" value="&lt;hr&gt;&lt;font style=&quot;font-size: 11px;&quot;&gt;+SerialPort(&lt;span style=&quot;color: rgb(0, 0, 0); font-family: &amp;quot;Cascadia Mono&amp;quot;; background-color: initial;&quot;&gt;PortName:string&lt;/span&gt;&lt;span style=&quot;color: rgb(0, 0, 0); font-family: &amp;quot;Cascadia Mono&amp;quot;; background-color: initial;&quot;&gt;,BaudRate:int&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;)&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;/span&gt;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" vertex="1" parent="serialPort">
+          <mxGeometry y="40" width="290" height="60" as="geometry" />
         </mxCell>
         <mxCell id="bleNusEx" value="BleNusEx" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#E67E22;strokeColor=#B35F13;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
-          <mxGeometry x="595" y="985" width="200" height="205" as="geometry" />
+          <mxGeometry x="615" y="985" width="295" height="95" as="geometry" />
         </mxCell>
-        <mxCell id="bleNusEx_m" value="-string _deviceName&lt;br&gt;-StringBuilder _rxBuffer&lt;br&gt;+IsConnected : bool&lt;hr size=&gt;+ConnectAsync(timeout) : Task&lt;br&gt;+SendAsync(text) : Task&lt;br&gt;+DisposeAsync() : ValueTask&lt;hr size=&gt;+DataReceived : event&lt;br&gt;+ConnectionChanged : event" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="bleNusEx" vertex="1">
-          <mxGeometry y="30" width="200" height="175" as="geometry" />
+        <mxCell id="bleNusEx_m" value="&lt;hr size=&quot;&quot;&gt;&lt;font style=&quot;font-size: 11px;&quot; color=&quot;#000000&quot;&gt;+BleNusEx&lt;span style=&quot;font-family: &amp;quot;Cascadia Mono&amp;quot;; background-color: initial;&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;font-family: &amp;quot;Cascadia Mono&amp;quot;; background-color: initial;&quot;&gt;deviceName :string&lt;/span&gt;)&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&lt;br&gt;+&lt;span style=&quot;font-family: &amp;quot;Cascadia Mono&amp;quot;; background-color: initial;&quot;&gt;IsConnected() :bool&lt;/span&gt;&lt;span style=&quot;background-color: initial; font-family: &amp;quot;Cascadia Mono&amp;quot;;&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;/span&gt;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="bleNusEx" vertex="1">
+          <mxGeometry y="30" width="290" height="70" as="geometry" />
         </mxCell>
         <mxCell id="iface" value="&lt;i&gt;«interface»&lt;/i&gt;&lt;br&gt;ISerialDataReadWrite" style="swimlane;rounded=1;arcSize=6;html=1;startSize=44;fillColor=#C0392B;strokeColor=#7B241C;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="440" y="720" width="300" height="130" as="geometry" />
         </mxCell>
-        <mxCell id="iface_m" value="+WriteLine(text) : void&lt;br&gt;+ReadExisting() : string&lt;br&gt;+DataReceived : event" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="iface" vertex="1">
-          <mxGeometry y="44" width="300" height="86" as="geometry" />
+        <mxCell id="iface_m" value="&lt;hr&gt;+WriteLine(text) : void&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&lt;br&gt;+ReadExisting() : string&lt;br&gt;+DataReceived : event" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="iface" vertex="1">
+          <mxGeometry y="40" width="300" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="e1" value="" style="endArrow=none;startArrow=diamondThin;startFill=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#455A64;strokeWidth=3;" parent="1" source="jsc" target="buttonControl" edge="1">
+        <mxCell id="e1" value="" style="endArrow=none;startArrow=diamondThin;startFill=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#455A64;strokeWidth=3;endSize=12;startSize=14;" parent="1" source="jsc" target="buttonControl" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e2" value="" style="endArrow=none;startArrow=diamondThin;startFill=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#455A64;strokeWidth=3;" parent="1" source="jsc" target="ledControl" edge="1">
+        <mxCell id="e2" value="" style="endArrow=none;startArrow=diamondThin;startFill=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#455A64;strokeWidth=3;endSize=16;startSize=14;" parent="1" source="jsc" target="ledControl" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e3" value="" style="endArrow=none;startArrow=diamondThin;startFill=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#455A64;strokeWidth=3;" parent="1" source="jsc" target="servoControl" edge="1">
+        <mxCell id="e3" value="" style="endArrow=none;startArrow=diamondThin;startFill=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#455A64;strokeWidth=3;startSize=14;" parent="1" source="jsc" target="servoControl" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e4" value="owns" style="endArrow=none;startArrow=diamondThin;startFill=0;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#6A4C93;fontColor=#6A4C93;" parent="1" source="buttonControl" target="switchCls" edge="1">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="e4" value="owns" style="endArrow=none;startArrow=diamondThin;startFill=0;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#6A4C93;fontColor=#6A4C93;startSize=14;" parent="1" source="buttonControl" target="switchCls" edge="1">
+          <mxGeometry x="0.2727" y="20" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-        <mxCell id="e5" value="owns" style="endArrow=none;startArrow=diamondThin;startFill=0;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#1B998B;fontColor=#1B998B;" parent="1" source="ledControl" target="led" edge="1">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="e5" value="owns" style="endArrow=none;startArrow=diamondThin;startFill=0;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#1B998B;fontColor=#1B998B;startSize=14;" parent="1" source="ledControl" target="led" edge="1">
+          <mxGeometry x="0.2727" y="20" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-        <mxCell id="e6" value="owns" style="endArrow=none;startArrow=diamondThin;startFill=0;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2E86C1;fontColor=#2E86C1;" parent="1" source="servoControl" target="servo" edge="1">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="e6" value="owns" style="endArrow=none;startArrow=diamondThin;startFill=0;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2E86C1;fontColor=#2E86C1;startSize=14;" parent="1" source="servoControl" target="servo" edge="1">
+          <mxGeometry x="0.1111" y="20" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-        <mxCell id="e7" value="Reads JSON" style="endArrow=open;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#6A4C93;fontColor=#6A4C93;strokeWidth=3;" parent="1" source="buttonControl" target="iface" edge="1">
-          <mxGeometry x="0.0295" relative="1" as="geometry">
+        <mxCell id="e7" value="&lt;font color=&quot;#330000&quot;&gt;Reads JSON&lt;/font&gt;" style="endArrow=open;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;fontColor=#6A4C93;strokeWidth=3;endSize=14;" parent="1" source="buttonControl" target="iface" edge="1">
+          <mxGeometry x="0.8689" y="-20" relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="370" y="320" />
               <mxPoint x="370" y="800" />
@@ -106,8 +115,8 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e8" value="Writes JSON" style="endArrow=open;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;fontColor=#000000;fillColor=#76608a;strokeWidth=3;entryX=1;entryY=0.308;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="ledControl" target="iface" edge="1">
-          <mxGeometry x="0.8572" y="10" relative="1" as="geometry">
+        <mxCell id="e8" value="Writes JSON" style="endArrow=open;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;fontColor=#000000;fillColor=#76608a;strokeWidth=3;entryX=1;entryY=0.308;entryDx=0;entryDy=0;entryPerimeter=0;endSize=14;" parent="1" source="ledControl" target="iface" edge="1">
+          <mxGeometry x="0.8572" y="20" relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="790" y="330" />
               <mxPoint x="790" y="760" />
@@ -115,37 +124,38 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e9" value="Writes JSON" style="endArrow=open;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#050505;fontColor=#000000;entryX=0.997;entryY=0.64;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=3;" parent="1" source="servoControl" target="iface_m" edge="1">
-          <mxGeometry x="0.8492" y="11" relative="1" as="geometry">
-            <mxPoint x="860" y="750" as="targetPoint" />
+        <mxCell id="e9" value="Writes JSON" style="endArrow=open;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#050505;fontColor=#000000;strokeWidth=3;endSize=14;entryX=1.007;entryY=0.601;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="servoControl" target="iface_m" edge="1">
+          <mxGeometry x="0.8879" y="22" relative="1" as="geometry">
+            <mxPoint x="750" y="830" as="targetPoint" />
             <Array as="points">
               <mxPoint x="850" y="335" />
-              <mxPoint x="850" y="819" />
+              <mxPoint x="850" y="814" />
+              <mxPoint x="742" y="814" />
             </Array>
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e11" value="implements" style="endArrow=block;endFill=0;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;fontColor=#000000;strokeWidth=3;entryX=0.22;entryY=0.965;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="serialPortEx" target="iface_m" edge="1">
-          <mxGeometry x="0.5469" y="-34" relative="1" as="geometry">
+        <mxCell id="e11" value="implements" style="endArrow=block;endFill=0;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;fontColor=#000000;strokeWidth=3;entryX=0.22;entryY=0.965;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endSize=14;" parent="1" source="serialPortEx" target="iface_m" edge="1">
+          <mxGeometry x="0.615" y="-34" relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="475" y="910" />
-              <mxPoint x="506" y="910" />
+              <mxPoint x="420" y="920" />
+              <mxPoint x="506" y="920" />
             </Array>
             <mxPoint x="520" y="890" as="sourcePoint" />
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e12" value="implements" style="endArrow=block;endFill=0;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;fontColor=#000000;strokeWidth=3;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" parent="1" source="bleNusEx" target="iface_m" edge="1">
-          <mxGeometry x="-0.0303" y="-22" relative="1" as="geometry">
+        <mxCell id="e12" value="implements" style="endArrow=block;endFill=0;dashed=1;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;fontColor=#000000;strokeWidth=3;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;endSize=14;" parent="1" source="bleNusEx" target="iface_m" edge="1">
+          <mxGeometry x="0.0969" y="-30" relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="695" y="910" />
-              <mxPoint x="665" y="910" />
+              <mxPoint x="763" y="920" />
+              <mxPoint x="665" y="920" />
             </Array>
             <mxPoint x="910" y="930" as="targetPoint" />
-            <mxPoint x="10" y="2" as="offset" />
+            <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e13" value="" style="endArrow=block;endFill=0;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E67E22;" parent="1" source="serialPortEx" target="serialPort" edge="1">
+        <mxCell id="e13" value="" style="endArrow=block;endFill=0;html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E67E22;endSize=14;" parent="1" source="serialPortEx" target="serialPort" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
