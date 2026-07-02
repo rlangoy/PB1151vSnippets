@@ -20,10 +20,19 @@ A **trackbar** drives the servo (output, PC → device):
 In `Form1_Load` the serial port is opened and handed to the controller. After that, you only ever talk to the controller — never the raw port:
 
 ```csharp
+// Initialize the JsonSerialController using a serial port
 _serialPort = new SerialPortEx { PortName = "COM3", BaudRate = 9600 };
 _serialPort.Open();
 jsonSerialController = new JsonSerialController(_serialPort);
+
+// Lister for switch events from the device
 jsonSerialController.ButtonControl["SW1"].SwitchStateChanged += Form1_SwitchStateChanged;
+
+// Turn LED1 on
+jsonSerialController.LedControl["LED1"].Value = 1;
+
+// Move the servo to 90 degrees
+jsonSerialController.ServoControl["SV1"].Angle = 90;
 ```
 
 What each line does:
@@ -31,6 +40,8 @@ What each line does:
 - **`new SerialPortEx { PortName = "COM3", BaudRate = 9600 }`** — opens COM3 at 9600 baud. Change `COM3` to match the port your board uses.
 - **`new JsonSerialController(_serialPort)`** — wraps the port. The controller exposes three helpers: `LedControl` and `ServoControl` (outgoing) and `ButtonControl` (incoming).
 - **`ButtonControl["SW1"].SwitchStateChanged += ...`** — subscribes to a single switch by name. When `SW1` changes on the hardware, your handler runs. Do the same for `SW2` and `SW3`.
+- **`LedControl["LED1"].Value = 1`** — turns `LED1` on (`0` = off, `1` = on). See [Controlling an LED](#controlling-an-led-pc--device) below.
+- **`ServoControl["SV1"].Angle = 90`** — moves servo `SV1` to 90°. See [Controlling a servo](#controlling-a-servo-pc--device) below.
 
 ### Connecting over BLE instead
 
