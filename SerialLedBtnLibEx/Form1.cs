@@ -29,7 +29,7 @@ namespace SerialLedBtnLibEx
 
             // Connect over BLE (Nordic UART Service) instead of the wired COM port.
             // The device name must match the peripheral's advertised name.
-            //BleNusEx _serialDev = new BleNusEx("Pico-NUS");
+            //BleNusEx _serialDev = new BleNusEx(deviceName= "Pico-NUS");
             //await _serialDev.ConnectAsync(TimeSpan.FromSeconds(15));
 
             // Connect using USB CDC-ACM (Communications Device Class - Abstract Control Model) ( USB <-> RS232 )
