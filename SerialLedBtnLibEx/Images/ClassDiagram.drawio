@@ -1,4 +1,4 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.1.2 Chrome/106.0.5249.199 Electron/21.4.3 Safari/537.36" modified="2026-07-02T06:48:47.654Z" etag="CYc7ZBo2MXgd478PVc_5" version="21.1.2" type="device">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.1.2 Chrome/106.0.5249.199 Electron/21.4.3 Safari/537.36" modified="2026-07-02T06:52:25.112Z" etag="8_cuA6HDUswVi2FrOogR" version="21.1.2" type="device">
   <diagram name="JsonSerialController" id="jsonSerialController">
     <mxGraphModel dx="1418" dy="940" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1850" pageHeight="900" math="0" shadow="0">
       <root>
@@ -19,7 +19,7 @@
         <mxCell id="jsc" value="JsonSerialController" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#37474F;strokeColor=#263238;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="440" y="30" width="300" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="jsc_m" value="+LedControl&amp;nbsp; &amp;nbsp; &amp;nbsp;:LedControl&lt;br&gt;+ServoControl&amp;nbsp; :ServoControl&lt;br&gt;+ButtonControl :ButtonControl&lt;hr size=&quot;&quot;&gt;+JsonSerialController( :ISerialDataReadWrite&amp;nbsp;)" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="jsc" vertex="1">
+        <mxCell id="jsc_m" value="+LedControl&amp;nbsp; &amp;nbsp; &amp;nbsp;:LedControl&lt;br&gt;+ServoControl&amp;nbsp; :ServoControl&lt;br&gt;+ButtonControl :ButtonControl&lt;hr size=&quot;&quot;&gt;+JsonSerialController( :ISerialDataReadWrite&amp;nbsp;)&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="jsc" vertex="1">
           <mxGeometry y="30" width="300" height="90" as="geometry" />
         </mxCell>
         <mxCell id="buttonControl" value="ButtonControl" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#6A4C93;strokeColor=#4A356B;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
@@ -31,13 +31,13 @@
         <mxCell id="switchCls" value="Switch" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#6A4C93;strokeColor=#4A356B;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="90" y="470" width="200" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="switchCls_m" value="&lt;hr&gt;+Id :string&lt;br&gt;+Value :int&lt;br&gt;+SwitchStateChanged :event" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="switchCls" vertex="1">
+        <mxCell id="switchCls_m" value="&lt;hr&gt;+Id :string&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;br&gt;+Value :int&lt;br&gt;+SwitchStateChanged :event" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="switchCls" vertex="1">
           <mxGeometry y="30" width="200" height="80" as="geometry" />
         </mxCell>
         <mxCell id="ledControl" value="LedControl" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#1B998B;strokeColor=#12766B;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
           <mxGeometry x="470" y="255" width="240" height="160" as="geometry" />
         </mxCell>
-        <mxCell id="ledControl_m" value="-_serialPort :ISerialDataReadWrite&lt;br&gt;+Leds :List&amp;lt;LED&amp;gt;&lt;br&gt;+this[id] LED&lt;hr size=&quot;&quot;&gt;+LedControl( :ISerialDataReadWrite )&amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;br&gt;+AllOn()&amp;nbsp; &amp;nbsp;: void&lt;br&gt;+AllOff()&amp;nbsp; &amp;nbsp; : void&lt;br&gt;+ToJson() : string" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="ledControl" vertex="1">
+        <mxCell id="ledControl_m" value="-_serialPort :ISerialDataReadWrite&lt;br&gt;+Leds :List&amp;lt;LED&amp;gt;&lt;br&gt;+this[id] LED&lt;hr size=&quot;&quot;&gt;+LedControl( :ISerialDataReadWrite )&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;br&gt;+AllOn()&amp;nbsp; &amp;nbsp;: void&lt;br&gt;+AllOff()&amp;nbsp; &amp;nbsp; : void&lt;br&gt;+ToJson() : string" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;spacingRight=6;fillColor=none;strokeColor=none;fontColor=#333333;fontSize=11;overflow=hidden;" parent="ledControl" vertex="1">
           <mxGeometry y="30" width="240" height="130" as="geometry" />
         </mxCell>
         <mxCell id="led" value="LED" style="swimlane;rounded=1;arcSize=6;html=1;startSize=30;fillColor=#1B998B;strokeColor=#12766B;fontColor=#ffffff;fontStyle=1;fontSize=12;align=center;verticalAlign=middle;swimlaneFillColor=#ffffff;shadow=1;" parent="1" vertex="1">
