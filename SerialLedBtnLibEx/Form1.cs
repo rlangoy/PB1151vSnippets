@@ -18,6 +18,7 @@ namespace SerialLedBtnLibEx
         private async void Form1_Load(object sender, EventArgs e)
         {
             //Set up GUI
+            this.Text = " I/O API Demo";
             checkBox1.Text = "LED1";
             checkBox2.Text = "SW1";
             checkBox3.Text = "LED2";
@@ -25,6 +26,7 @@ namespace SerialLedBtnLibEx
             checkBox5.Text = "LED3";
             checkBox6.Text = "SW3";
             checkBox7.Text = "LED4";
+            checkBox8.Text = "SW4";
             this.textBox1.Text = "0";
 
             // Connect over BLE (Nordic UART Service) instead of the wired COM port.
@@ -43,6 +45,7 @@ namespace SerialLedBtnLibEx
             jsonSerialController.ButtonControl["SW1"].SwitchStateChanged += Form1_SwitchStateChanged;
             jsonSerialController.ButtonControl["SW2"].SwitchStateChanged += Form1_SwitchStateChanged;
             jsonSerialController.ButtonControl["SW3"].SwitchStateChanged += Form1_SwitchStateChanged;
+            jsonSerialController.ButtonControl["SW4"].SwitchStateChanged += Form1_SwitchStateChanged;
         }
         // Husk:
         // Nå er vi i serie-port tråden (bakgrunnstråden til serieportens datamotaks tråd)
@@ -59,6 +62,9 @@ namespace SerialLedBtnLibEx
 
             if (e.Id == "SW3")
             { checkBox6.BeginInvoke(() => checkBox6.Checked = Convert.ToBoolean(e.Value)); }
+
+            if (e.Id == "SW4")
+            { checkBox8.BeginInvoke(() => checkBox8.Checked = Convert.ToBoolean(e.Value)); }
 
         }
 

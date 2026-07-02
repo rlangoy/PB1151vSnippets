@@ -40,6 +40,7 @@
             label2 = new Label();
             textBox1 = new TextBox();
             groupBox1 = new GroupBox();
+            checkBox8 = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
             groupBox1.SuspendLayout();
             SuspendLayout();
@@ -172,11 +173,23 @@
             groupBox1.Text = "Servo SV1 Control";
             groupBox1.Enter += groupBox1_Enter;
             // 
+            // checkBox8
+            // 
+            checkBox8.AutoSize = true;
+            checkBox8.Enabled = false;
+            checkBox8.Location = new Point(365, 138);
+            checkBox8.Name = "checkBox8";
+            checkBox8.Size = new Size(82, 19);
+            checkBox8.TabIndex = 13;
+            checkBox8.Text = "checkBox8";
+            checkBox8.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(932, 223);
+            Controls.Add(checkBox8);
             Controls.Add(checkBox7);
             Controls.Add(checkBox5);
             Controls.Add(checkBox6);
@@ -210,5 +223,6 @@
         private Label label2;
         private TextBox textBox1;
         private GroupBox groupBox1;
+        private CheckBox checkBox8;
     }
 }

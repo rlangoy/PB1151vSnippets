@@ -321,6 +321,7 @@ namespace SerialLedBtnLibEx
             new Switch("SW1"),
             new Switch("SW2"),
             new Switch("SW3"),
+            new Switch("SW4"),
         };
 
         /// <summary>

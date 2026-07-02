@@ -110,6 +110,7 @@ switches = {
     "SW1": Pin(10, Pin.IN, Pin.PULL_DOWN),
     "SW2": Pin(11, Pin.IN, Pin.PULL_DOWN),
     "SW3": Pin(12, Pin.IN, Pin.PULL_DOWN),
+    "SW4": Pin(16, Pin.IN),
 }
 
 
@@ -143,11 +144,16 @@ def SW2Changed(sw):
 def SW3Changed(sw):
     _queue_switch("SW3", sw)
 
+def SW4Changed(sw):
+    _queue_switch("SW4", sw)
+
 
 def flushSwitchEvents():
     """Emit any queued switch events from normal (non-IRQ) context."""
-    while _switch_events:
+    while _switch_events:        
         sw_id, value = _switch_events.pop(0)
+        if(sw_id == "SW4") :
+            value=value ^ 1 # toogle value , so that when a bobject is near the value is 1
         emit('{"switches": [{"id": "%s", "value": %d}]}' % (sw_id, value))
 
 
@@ -155,6 +161,7 @@ def flushSwitchEvents():
 switches["SW1"].irq(trigger=Pin.IRQ_FALLING | Pin.IRQ_RISING, handler=SW1Changed)
 switches["SW2"].irq(trigger=Pin.IRQ_FALLING | Pin.IRQ_RISING, handler=SW2Changed)
 switches["SW3"].irq(trigger=Pin.IRQ_FALLING | Pin.IRQ_RISING, handler=SW3Changed)
+switches["SW4"].irq(trigger=Pin.IRQ_FALLING | Pin.IRQ_RISING, handler=SW4Changed)
 
 
 # ---- Command handlers ----------------------------------------------------
