@@ -38,37 +38,50 @@ Switches use interrupts (IRQ on both rising and falling edges), so both press an
 
 Communication is line-based: one JSON object per line, terminated by a newline. The full firmware (`jsonSerialAndBLE/serialBleJSONLedAndSwitches.py`) parses identical JSON on **both** the USB serial console and a BLE NUS connection, and sends every response out on both transports. Default serial port settings are **COM3 @ 9600 baud** (change `COM3` in `Form1.cs` to match your machine); the board advertises over BLE as `Pico-NUS`.
 
-**PC → device (set LEDs).** A single LED or an array; LEDs not listed are left unchanged:
+PC → device (set LEDs).** A single LED or an array; LEDs not listed are left unchanged:
 
 ```json
 {"leds": [{"id": "LED1", "value": 1}, {"id": "LED4", "value": 0}]}
 ```
 
-**PC → device (move/release a servo).** Angle is clamped to 0–180°; `release` drops holding torque:
+PC → device (move/release a servo).** Angle is clamped to 0–180°; `release` drops holding torque:
 
 ```json
 {"servos": [{"id": "SV1", "angle": 90}]}
 {"servos": [{"id": "SV1", "action": "release"}]}
 ```
 
-**Device → PC (switch changed).** Sent on every edge, so a press then release produces two lines:
+Device → PC (switch changed).** Sent on every edge, so a press then release produces two lines:
 
 ```json
 {"switches": [{"id": "SW1", "value": 1}]}
 {"switches": [{"id": "SW1", "value": 0}]}
 ```
 
-**PC → device (read or stream a sensor), device → PC (response).** One-shot reads and stream ticks share the same response shape:
+PC → device (read or stream a sensor).** One-shot reads and stream ticks share the same response shape:
 
 ```json
 {"sensors": [{"id": "TEMP1", "read": 1}]}
-{"sensors": [{"id": "TEMP1", "value": 23.56, "unit": "C"}]}
+```
+Device → PC (response)
 
+```json
+{"sensors": [{"id": "TEMP1", "value": 23.56, "unit": "C"}]}
+```
+
+PC → device (start/stop stream a sensor).
+
+```json
 {"sensors": [{"id": "ACC1", "action": "stream", "interval_ms": 50}]}
 {"sensors": [{"id": "ACC1", "value": {"x": 0.012, "y": -0.004, "z": 0.998}, "unit": "g"}]}
 {"sensors": [{"id": "ACC1", "action": "stop"}]}
 ```
 
+Device → PC (sensor stream relpies).
+
+```json
+{"sensors": [{"id": "ACC1", "value": {"x": 0.012, "y": -0.004, "z": 0.998}, "unit": "g"}]}
+```
 Collections (`leds`, `servos`, `sensors`) can be combined in a single line, and sensor failures are reported per `id` (e.g. `{"sensors": [{"id": "TEMP1", "error": "i2c_nack"}]}`) instead of a top-level failure. See `Firmware/Micropython/jsonSerialAndBLE/sensor-protocol-design-spec.md` for the full sensor protocol reference.
 
 ## C# project structure
