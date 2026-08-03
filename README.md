@@ -2,39 +2,53 @@
 
 Code snippets for the course **PB1151 – Objektorientert programmering og databaser** (Object-Oriented Programming and Databases) at the **University of South-Eastern Norway (USN)**.
 
-The snippets demonstrate object-oriented programming concepts in C# by talking to real hardware: a Windows desktop app controls LEDs and reads pushbuttons on a microcontroller over a serial port, using a small JSON-based protocol.
+The snippets demonstrate object-oriented programming concepts in C# by talking to real hardware: a Windows desktop app controls LEDs and a servo, and reads pushbuttons and I2C sensors, on a microcontroller over a serial port or BLE, using a small JSON-based protocol.
 
 ## What's in here
 
 | Path | Description |
 |------|-------------|
-| `SerialLedBtnLibEx/` | C# WinForms host application (.NET 10). Controls LEDs and mirrors switch state over RS232 using JSON. |
-| `Firmware/Micropython/` | MicroPython firmware for the microcontroller (Raspberry Pi Pico style board). |
+| `SerialLedBtnLibEx/` | C# WinForms host application (.NET 10). Controls LEDs and a servo, and mirrors switch state, over RS232 or BLE using JSON. |
+| `Firmware/Micropython/jsonSerialAndBLE/` | Full-featured MicroPython firmware: LEDs, servo, switches, and I2C sensors (TMP102, ADXL345), served over **both** USB serial and BLE (Nordic UART Service) at once. |
+| `Firmware/Micropython/snipplets/` | Smaller standalone examples (LED-only test, basic serial-only JSON, plain BLE echo) that the full firmware builds on. |
 
 ### Firmware
 
 | File | Description |
 |------|-------------|
-| `serialJSONLedAndSwitches.py` | Full JSON protocol. Reads LED commands from serial and prints switch changes as JSON. Pair this one with the C# app. |
-| `LED_Test.py` | Minimal standalone test. Mirrors each switch directly to its matching LED on the board — no PC needed. |
+| `jsonSerialAndBLE/serialBleJSONLedAndSwitches.py` | Full JSON protocol over serial **and** BLE simultaneously. LEDs, servo control, switch events, and one-shot/streaming I2C sensor reads (TMP102, ADXL345). Pair this one with the C# app. |
+| `jsonSerialAndBLE/ble_nus.py` | BLE Nordic UART Service (NUS) transport used by the firmware above. |
+| `jsonSerialAndBLE/tmp102.py` / `jsonSerialAndBLE/adxl345.py` | I2C drivers for the temperature sensor and 3-axis accelerometer. |
+| `jsonSerialAndBLE/sensor_service.py` | Owns per-sensor stream timers and formats sensor request/response JSON. |
+| `snipplets/serialJSONLedAndSwitches.py` | Earlier, serial-only version of the JSON protocol (LEDs + switches, no servo/BLE/sensors). |
+| `snipplets/LED_Test.py` | Minimal standalone test. Mirrors each switch directly to its matching LED on the board — no PC needed. |
 
 ## Hardware
 
 The firmware targets a board with:
 
 - **4 LEDs** on GPIO 6, 7, 8, 9 → `LED1`–`LED4`
-- **3 switches** (pushbuttons, pull-down) on GPIO 10, 11, 12 → `SW1`–`SW3`
+- **4 switches** on GPIO 10, 11, 12, 16 → `SW1`–`SW3` (pushbuttons, pull-down) and `SW4` (e.g. a proximity/IR sensor; value is inverted so "object near" reads as `1`)
+- **1 servo** (SG90-style, PWM) on GPIO 21 → `SV1`
+- **I2C sensors** on I2C0 (SDA = GP4, SCL = GP5): a TMP102 temperature sensor (`TEMP1`) and an ADXL345 3-axis accelerometer (`ACC1`)
 
-Switches use interrupts (IRQ on both rising and falling edges), so both press and release are reported.
+Switches use interrupts (IRQ on both rising and falling edges), so both press and release are reported. Sensor drivers initialize lazily, so booting with sensors unplugged is fine — errors surface per request instead.
 
 ## The JSON serial protocol
 
-Communication is line-based: one JSON object per line, terminated by a newline. Default port settings are **COM3 @ 9600 baud** (change `COM3` in `Form1.cs` to match your machine).
+Communication is line-based: one JSON object per line, terminated by a newline. The full firmware (`jsonSerialAndBLE/serialBleJSONLedAndSwitches.py`) parses identical JSON on **both** the USB serial console and a BLE NUS connection, and sends every response out on both transports. Default serial port settings are **COM3 @ 9600 baud** (change `COM3` in `Form1.cs` to match your machine); the board advertises over BLE as `Pico-NUS`.
 
 **PC → device (set LEDs).** A single LED or an array; LEDs not listed are left unchanged:
 
 ```json
 {"leds": [{"id": "LED1", "value": 1}, {"id": "LED4", "value": 0}]}
+```
+
+**PC → device (move/release a servo).** Angle is clamped to 0–180°; `release` drops holding torque:
+
+```json
+{"servos": [{"id": "SV1", "angle": 90}]}
+{"servos": [{"id": "SV1", "action": "release"}]}
 ```
 
 **Device → PC (switch changed).** Sent on every edge, so a press then release produces two lines:
@@ -43,6 +57,19 @@ Communication is line-based: one JSON object per line, terminated by a newline. 
 {"switches": [{"id": "SW1", "value": 1}]}
 {"switches": [{"id": "SW1", "value": 0}]}
 ```
+
+**PC → device (read or stream a sensor), device → PC (response).** One-shot reads and stream ticks share the same response shape:
+
+```json
+{"sensors": [{"id": "TEMP1", "read": 1}]}
+{"sensors": [{"id": "TEMP1", "value": 23.56, "unit": "C"}]}
+
+{"sensors": [{"id": "ACC1", "action": "stream", "interval_ms": 50}]}
+{"sensors": [{"id": "ACC1", "value": {"x": 0.012, "y": -0.004, "z": 0.998}, "unit": "g"}]}
+{"sensors": [{"id": "ACC1", "action": "stop"}]}
+```
+
+Collections (`leds`, `servos`, `sensors`) can be combined in a single line, and sensor failures are reported per `id` (e.g. `{"sensors": [{"id": "TEMP1", "error": "i2c_nack"}]}`) instead of a top-level failure. See `Firmware/Micropython/jsonSerialAndBLE/sensor-protocol-design-spec.md` for the full sensor protocol reference.
 
 ## C# project structure
 
@@ -61,8 +88,10 @@ Concepts illustrated: **classes and objects, encapsulation, properties, indexers
 ### 1. Flash the firmware
 
 1. Open the board in [Thonny](https://thonny.org/) (or your preferred MicroPython IDE).
-2. Copy `Firmware/Micropython/serialJSONLedAndSwitches.py` to the board.
-3. Run it. Pressing a switch should print a JSON line to the console.
+2. Copy the whole `Firmware/Micropython/jsonSerialAndBLE/` folder to the board (the main script depends on `ble_nus.py`, `tmp102.py`, `adxl345.py`, and `sensor_service.py`).
+3. Run `serialBleJSONLedAndSwitches.py`. Pressing a switch should print a JSON line to the console; the board also starts advertising over BLE as `Pico-NUS`.
+
+> Only need LEDs and switches over serial, without BLE/servo/sensors? `Firmware/Micropython/snipplets/serialJSONLedAndSwitches.py` is the minimal predecessor version.
 
 ### 2. Run the C# app
 
