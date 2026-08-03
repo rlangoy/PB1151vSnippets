@@ -1,10 +1,10 @@
 """
-Serial + BLE (NUS) JSON control: LEDs, servo, and switch status reporting.
+Serial + BLE (NUS) JSON control: LEDs, servo, switch status, and I2C sensors.
 
 The same JSON protocol works over the USB serial console AND over a BLE
 Nordic UART Service connection. Lines received on either transport are
-parsed identically; all responses (errors, switch events) are sent back
-out over BOTH transports.
+parsed identically; all responses (errors, switch events, sensor data)
+are sent back out over BOTH transports.
 
 Set an LED (single line, then newline):
     {"leds": {"id": "LED1", "value": 1}}              # LED1 on
@@ -19,8 +19,23 @@ Move a servo to an angle (0-180):
 Release a servo (drops holding torque / jitter until next angle command):
     {"servos": [{"id": "SV1", "action": "release"}]}
 
-LEDs, servos, and switches are independent collections and may be combined:
-    {"leds": [{"id": "LED1", "value": 1}], "servos": [{"id": "SV1", "angle": 0}]}
+Read a sensor once (TMP102 temperature, ADXL345 acceleration):
+    {"sensors": [{"id": "TEMP1", "read": 1}]}
+    {"sensors": [{"id": "ACC1", "read": 1}]}
+
+Responses use the same shape for one-shot reads and stream ticks:
+    {"sensors": [{"id": "TEMP1", "value": 23.56, "unit": "C"}]}
+    {"sensors": [{"id": "ACC1", "value": {"x": 0.012, "y": -0.004, "z": 0.998}, "unit": "g"}]}
+
+Stream a sensor at its own rate, and stop it again:
+    {"sensors": [{"id": "ACC1", "action": "stream", "interval_ms": 50}]}
+    {"sensors": [{"id": "ACC1", "action": "stop"}]}
+
+Sensor failures are reported per id using the spec's error codes:
+    {"sensors": [{"id": "TEMP1", "error": "i2c_nack"}]}
+
+Collections are independent and may be combined in a single line:
+    {"leds": [{"id": "LED1", "value": 1}], "sensors": [{"id": "TEMP1", "read": 1}]}
 
 Pressing a switch reports its status as JSON. SW1 fires on both edges, so a
 press then release reports:
@@ -35,9 +50,12 @@ import time
 import sys
 import select
 import json
-from machine import Pin, PWM
+from machine import Pin, PWM, I2C
 
 from ble_nus import BLENUS   # BLE Nordic UART Service transport (see ble_nus.py)
+from tmp102 import Tmp102
+from adxl345 import Adxl345
+from sensor_service import SensorService, Tmp102Endpoint, Adxl345Endpoint
 
 
 # ---- Servo driver --------------------------------------------------------
@@ -113,6 +131,11 @@ switches = {
     "SW4": Pin(16, Pin.IN),
 }
 
+# I2C sensors on I2C0: SDA = GP4, SCL = GP5 (adjust to your wiring).
+# The drivers initialize lazily, so booting with sensors unplugged is fine;
+# errors surface per request instead.
+i2c = I2C(0, sda=Pin(4), scl=Pin(5), freq=400_000)
+
 
 def emit(msg):
     """Send a line to BOTH serial and the connected BLE central.
@@ -122,6 +145,15 @@ def emit(msg):
     """
     print(msg)            # serial / USB console
     ble.sendline(msg)     # BLE NUS TX (no-op if nothing connected)
+
+
+# ---- Sensors -------------------------------------------------------------
+# The service owns the per-sensor stream timers and formats every response.
+# Requests are dispatched in handleSensors(); due stream samples are emitted
+# from the main loop via sensor_service.service_streams(), never from IRQs.
+sensor_service = SensorService(emit)
+sensor_service.register(Tmp102Endpoint("TEMP1", Tmp102(i2c)))
+sensor_service.register(Adxl345Endpoint("ACC1", Adxl345(i2c)))
 
 
 # ---- Switch events -------------------------------------------------------
@@ -233,8 +265,13 @@ def handleServos(data):
         servo.set_angle(angle)   # set_angle clamps to 0-180
 
 
+def handleSensors(data):
+    # Missing "sensors" key is not an error -- just nothing to do.
+    sensor_service.handle_request(_as_list(data.get("sensors")))
+
+
 def parseJson(payload):
-    """Parse one JSON line and dispatch to the LED and servo handlers."""
+    """Parse one JSON line and dispatch to the LED, servo, and sensor handlers."""
     if len(payload) == 0:
         return
 
@@ -250,6 +287,7 @@ def parseJson(payload):
 
     handleLeds(data)
     handleServos(data)
+    handleSensors(data)
 
 
 # Lines arriving over BLE are handled the same way as serial lines.
@@ -296,7 +334,10 @@ while True:
     # 1) Emit any switch events captured by the IRQ handlers.
     flushSwitchEvents()
 
-    # 2) Handle a serial command line if one is ready.
+    # 2) Emit sensor stream samples that have come due.
+    sensor_service.service_streams()
+
+    # 3) Handle a serial command line if one is ready.
     serialInput = readSerialLine()
     if serialInput is not None:
         parseJson(serialInput)
