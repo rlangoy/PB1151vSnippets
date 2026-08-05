@@ -1,6 +1,7 @@
 using System.IO.Ports;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
+using System.Diagnostics;
 
 namespace SerialLedBtnLibEx
 {
@@ -42,11 +43,31 @@ namespace SerialLedBtnLibEx
 
             // _serialDev implements ISerialDataReadWrite, so it drops straight into the JsonSerialController.
             jsonSerialController = new JsonSerialController(_serialDev);
-            jsonSerialController.ButtonControl["SW1"].SwitchStateChanged += Form1_SwitchStateChanged;
-            jsonSerialController.ButtonControl["SW2"].SwitchStateChanged += Form1_SwitchStateChanged;
-            jsonSerialController.ButtonControl["SW3"].SwitchStateChanged += Form1_SwitchStateChanged;
-            jsonSerialController.ButtonControl["SW4"].SwitchStateChanged += Form1_SwitchStateChanged;
+            jsonSerialController.ButtonControl["SW1"].ValueChanged += Form1_SwitchStateChanged;
+            jsonSerialController.ButtonControl["SW2"].ValueChanged += Form1_SwitchStateChanged;
+            jsonSerialController.ButtonControl["SW3"].ValueChanged += Form1_SwitchStateChanged;
+            jsonSerialController.ButtonControl["SW4"].ValueChanged += Form1_SwitchStateChanged;
+            jsonSerialController.SensorControl["TEMP1"].DataChanged += Form1_TempSensorDataChanged;
+            jsonSerialController.SensorControl.Read("TEMP1");
+            jsonSerialController.SensorControl["ACC1"].DataChanged += Form1_DataChanged;
+            jsonSerialController.SensorControl.Read("ACC1");    
         }
+
+        private void Form1_DataChanged(object? sender, SensorEventArgs e)
+        {
+            if (sender is AccSensor sensor)
+                Debug.WriteLine($"Form1::Form1_AccSensorDataChanged {sensor.Id}: {sensor.X}, {sensor.Y}, {sensor.Z } {sensor.Unit}");
+
+        }
+
+        private void Form1_TempSensorDataChanged(object? sender, SensorEventArgs e)
+        {
+            //Show temp in the console window
+            if (sender is TempSensor sensor)
+                Debug.WriteLine($"Form1::Form1_TempSensorDataChanged {sensor.Id}: {sensor.Value} {sensor.Unit}");
+
+        }
+
         // Husk:
         // Nå er vi i serie-port tråden (bakgrunnstråden til serieportens datamotaks tråd)
         // For å snakke med GUI må vi bruke BeginInvoke for å kjøre koden i GUI tråden.

@@ -266,7 +266,7 @@ namespace SerialLedBtnLibEx
     }
 
     /// <summary>
-    /// A single hardware switch (button). Raises <see cref="SwitchStateChanged"/>
+    /// A single hardware switch (button). Raises <see cref="ValueChanged"/>
     /// only when its value actually changes.
     /// </summary>
     public class Switch
@@ -292,27 +292,35 @@ namespace SerialLedBtnLibEx
                     return; // no change -> no event
 
                 _value = value;
-                SwitchStateChanged?.Invoke(this, new SwitchEventArgs(Id, _value));
+                ValueChanged?.Invoke(this, new SwitchEventArgs(Id, _value));
             }
         }
 
         /// <summary>Raised when this switch's value changes.</summary>
-        public event EventHandler<SwitchEventArgs>? SwitchStateChanged;
+        public event EventHandler<SwitchEventArgs>? ValueChanged;
     }
 
     /// <summary>
     /// Owns a fixed set of switches and parses incoming JSON from the device.
     /// Subscribe to per-switch changes via the indexer, e.g.:
-    /// <code>buttonControl["SW1"].SwitchStateChanged += OnSw1Changed;</code>
+    /// <code>buttonControl["SW1"].ValueChanged += OnSw1Changed;</code>
     /// </summary>
     public class ButtonControl
     {
         private readonly ISerialDataReadWrite _serialPort;
+        private readonly LineBuffer _lineBuffer = new();
+        private readonly object _receiveLock = new();
 
-        public ButtonControl(ISerialDataReadWrite serialPort)
+        /// <param name="subscribeToPort">
+        /// Pass false when another object (e.g. <see cref="JsonSerialController"/>)
+        /// reads the port and dispatches lines to <see cref="ProcessLine"/>.
+        /// Two subscribers draining the same port would steal each other's data.
+        /// </param>
+        public ButtonControl(ISerialDataReadWrite serialPort, bool subscribeToPort = true)
         {
             _serialPort = serialPort;
-            _serialPort.DataReceived += OnDataReceived;
+            if (subscribeToPort)
+                _serialPort.DataReceived += OnDataReceived;
         }
 
         [JsonPropertyName("switches")]
@@ -325,7 +333,7 @@ namespace SerialLedBtnLibEx
         };
 
         /// <summary>
-        /// Indexer access, e.g. <c>buttonControl["SW1"].SwitchStateChanged += handler;</c>
+        /// Indexer access, e.g. <c>buttonControl["SW1"].ValueChanged += handler;</c>
         /// </summary>
         public Switch this[string id] =>
             Switches.FirstOrDefault(sw => sw.Id == id)
@@ -339,13 +347,14 @@ namespace SerialLedBtnLibEx
 
         private void OnDataReceived(object? sender, SerialDataReceivedEventArgs e)
         {
-            // ReadExisting can return several lines at once; handle each separately.
-            string data = _serialPort.ReadExisting();
-            foreach (string line in data.Split('\n'))
+            // DataReceived can fire on several thread-pool threads at once;
+            // the lock keeps reads and line handling in order.
+            lock (_receiveLock)
             {
-                string trimmed = line.Trim();
-                if (trimmed.Length > 0)
-                    ProcessLine(trimmed);
+                // ReadExisting can return several lines at once, or stop
+                // mid-line; the buffer hands back only complete lines.
+                foreach (string line in _lineBuffer.AddData(_serialPort.ReadExisting()))
+                    ProcessLine(line);
             }
         }
 
@@ -382,7 +391,7 @@ namespace SerialLedBtnLibEx
                     continue;
 
                 bool changed = sw.Value != state.Value;
-                sw.Value = state.Value; // raises Switch.SwitchStateChanged if it actually changed
+                sw.Value = state.Value; // raises Switch.ValueChanged if it actually changed
 
                 if (changed)
                     SwitchChanged?.Invoke(this, new SwitchEventArgs(state.Id, state.Value));
@@ -403,6 +412,326 @@ namespace SerialLedBtnLibEx
 
             [JsonPropertyName("value")]
             public int Value { get; set; }
+        }
+    }
+
+    /// <summary>
+    /// Event data for a sensor reading.
+    /// </summary>
+    public class SensorEventArgs : EventArgs
+    {
+        public SensorEventArgs(Sensor sensor)
+        {
+            Sensor = sensor;
+        }
+
+        public Sensor Sensor { get; }
+        public string Id => Sensor.Id;
+    }
+
+    /// <summary>
+    /// Event data for a sensor error reported by the device, e.g. "i2c_nack".
+    /// </summary>
+    public class SensorErrorEventArgs : EventArgs
+    {
+        public SensorErrorEventArgs(string id, string error)
+        {
+            Id = id;
+            Error = error;
+        }
+
+        public string Id { get; }
+        public string Error { get; }
+    }
+
+    /// <summary>
+    /// Base class for a single device sensor. Subclasses parse the
+    /// sensor-specific "value" payload. Raises <see cref="DataChanged"/>
+    /// for every reading (one-shot reads and stream ticks share one shape).
+    /// </summary>
+    public abstract class Sensor
+    {
+        protected Sensor(string id, string unit)
+        {
+            Id = id;
+            Unit = unit;
+        }
+
+        [JsonPropertyName("id")]
+        public string Id { get; }
+
+        /// <summary>Measurement unit, e.g. "C" or "g" (updated from responses).</summary>
+        [JsonPropertyName("unit")]
+        public string Unit { get; private set; }
+
+        /// <summary>
+        /// Raised for every reading received from the device. Carries a
+        /// <see cref="SensorEventArgs"/> so handlers can reach the sensor
+        /// via <see cref="SensorEventArgs.Sensor"/> without casting sender.
+        /// </summary>
+        public event EventHandler<SensorEventArgs>? DataChanged;
+
+        /// <summary>Raised when the device reports an error for this sensor.</summary>
+        public event EventHandler<SensorErrorEventArgs>? ErrorReceived;
+
+        /// <summary>
+        /// Parses and stores a "value" payload from the device.
+        /// Raises <see cref="DataChanged"/> when the payload is valid.
+        /// </summary>
+        public bool TryApplyReading(JsonElement value, string? unit)
+        {
+            if (!TryParseValue(value))
+                return false; // wrong shape for this sensor -> ignore
+
+            if (!string.IsNullOrEmpty(unit))
+                Unit = unit;
+
+            DataChanged?.Invoke(this, new SensorEventArgs(this));
+            return true;
+        }
+
+        public void ApplyError(string error) =>
+            ErrorReceived?.Invoke(this, new SensorErrorEventArgs(Id, error));
+
+        protected abstract bool TryParseValue(JsonElement value);
+    }
+
+    /// <summary>
+    /// TMP102 temperature sensor. Reading:
+    /// <code>{"sensors": [{"id": "TEMP1", "value": 23.56, "unit": "C"}]}</code>
+    /// </summary>
+    public class TempSensor : Sensor
+    {
+        public TempSensor(string id) : base(id, "C")
+        {
+        }
+
+        /// <summary>Last received temperature in <see cref="Sensor.Unit"/>.</summary>
+        public double Value { get; private set; }
+
+        protected override bool TryParseValue(JsonElement value)
+        {
+            if (value.ValueKind != JsonValueKind.Number)
+                return false;
+
+            Value = value.GetDouble();
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// ADXL345 acceleration sensor. Reading:
+    /// <code>{"sensors": [{"id": "ACC1", "value": {"x": 0.012, "y": -0.004, "z": 0.998}, "unit": "g"}]}</code>
+    /// </summary>
+    public class AccSensor : Sensor
+    {
+        public AccSensor(string id) : base(id, "g")
+        {
+        }
+
+        /// <summary>Last received acceleration in <see cref="Sensor.Unit"/>.</summary>
+        public double X { get; private set; }
+        public double Y { get; private set; }
+        public double Z { get; private set; }
+
+        protected override bool TryParseValue(JsonElement value)
+        {
+            if (value.ValueKind != JsonValueKind.Object
+                || !value.TryGetProperty("x", out JsonElement x)
+                || !value.TryGetProperty("y", out JsonElement y)
+                || !value.TryGetProperty("z", out JsonElement z))
+                return false;
+
+            X = x.GetDouble();
+            Y = y.GetDouble();
+            Z = z.GetDouble();
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// Owns a fixed set of sensors. Sends read/stream/stop requests and parses
+    /// incoming sensor JSON from the device. Mirrors the device-side protocol:
+    /// <code>
+    /// {"sensors": [{"id": "TEMP1", "read": 1}]}
+    /// {"sensors": [{"id": "ACC1", "action": "stream", "interval_ms": 50}]}
+    /// {"sensors": [{"id": "ACC1", "action": "stop"}]}
+    /// </code>
+    /// Subscribe to per-sensor readings via the indexer, e.g.:
+    /// <code>sensorControl["TEMP1"].DataChanged += OnTempReading;</code>
+    /// </summary>
+    public class SensorControl
+    {
+        private readonly ISerialDataReadWrite _serialPort;
+        private readonly LineBuffer _lineBuffer = new();
+        private readonly object _receiveLock = new();
+
+        /// <param name="subscribeToPort">
+        /// Pass false when another object (e.g. <see cref="JsonSerialController"/>)
+        /// reads the port and dispatches lines to <see cref="ProcessLine"/>.
+        /// Two subscribers draining the same port would steal each other's data.
+        /// </param>
+        public SensorControl(ISerialDataReadWrite serialPort, bool subscribeToPort = true)
+        {
+            _serialPort = serialPort;
+            if (subscribeToPort)
+                _serialPort.DataReceived += OnDataReceived;
+        }
+
+        [JsonPropertyName("sensors")]
+        public List<Sensor> Sensors { get; } = new()
+        {
+            new TempSensor("TEMP1"),
+            new AccSensor("ACC1"),
+        };
+
+        /// <summary>Indexer access, e.g. <c>sensorControl["TEMP1"].DataChanged += handler;</c></summary>
+        public Sensor this[string id] =>
+            FindSensor(id)
+            ?? throw new KeyNotFoundException($"No sensor with id '{id}'.");
+
+        /// <summary>
+        /// Raised for any sensor reading. Inspect <see cref="SensorEventArgs.Sensor"/>
+        /// to know which sensor was updated.
+        /// </summary>
+        public event EventHandler<SensorEventArgs>? SensorChanged;
+
+        /// <summary>Raised when the device reports a sensor error, e.g. "i2c_nack".</summary>
+        public event EventHandler<SensorErrorEventArgs>? SensorError;
+
+        /// <summary>Request a single reading of one sensor.</summary>
+        public void Read(string id) =>
+            Send(new { id = this[id].Id, read = 1 });
+
+        /// <summary>Start streaming a sensor at the given interval.</summary>
+        public void StartStream(string id, int intervalMs) =>
+            Send(new { id = this[id].Id, action = "stream", interval_ms = intervalMs });
+
+        /// <summary>Stop streaming a sensor.</summary>
+        public void StopStream(string id) =>
+            Send(new { id = this[id].Id, action = "stop" });
+
+        /// <summary>
+        /// Parses a single JSON line. Only lines describing sensors
+        /// (i.e. containing a "sensors" array) are handled.
+        /// </summary>
+        public void ProcessLine(string json)
+        {
+            // Only parse sensor messages.
+            if (!json.Contains("\"sensors\""))
+                return;
+
+            SensorMessage? message;
+            try
+            {
+                message = JsonSerializer.Deserialize<SensorMessage>(json);
+            }
+            catch (JsonException)
+            {
+                return; // ignore malformed input
+            }
+
+            if (message?.Sensors == null)
+                return;
+
+            foreach (SensorState state in message.Sensors)
+            {
+                if (string.IsNullOrEmpty(state.Id))
+                    continue;
+
+                Sensor? sensor = FindSensor(state.Id);
+                if (sensor == null)
+                    continue;
+
+                if (!string.IsNullOrEmpty(state.Error))
+                {
+                    sensor.ApplyError(state.Error); // raises Sensor.ErrorReceived
+                    SensorError?.Invoke(this, new SensorErrorEventArgs(sensor.Id, state.Error));
+                    continue;
+                }
+
+                if (state.Value.ValueKind != JsonValueKind.Undefined
+                    && sensor.TryApplyReading(state.Value, state.Unit))
+                {
+                    SensorChanged?.Invoke(this, new SensorEventArgs(sensor));
+                }
+            }
+        }
+
+        private void OnDataReceived(object? sender, SerialDataReceivedEventArgs e)
+        {
+            // DataReceived can fire on several thread-pool threads at once;
+            // the lock keeps reads and line handling in order.
+            lock (_receiveLock)
+            {
+                // ReadExisting can return several lines at once, or stop
+                // mid-line; the buffer hands back only complete lines.
+                foreach (string line in _lineBuffer.AddData(_serialPort.ReadExisting()))
+                    ProcessLine(line);
+            }
+        }
+
+        // Ids are matched case-insensitively because the device lowercases
+        // incoming lines before parsing.
+        private Sensor? FindSensor(string id) =>
+            Sensors.FirstOrDefault(sensor =>
+                string.Equals(sensor.Id, id, StringComparison.OrdinalIgnoreCase));
+
+        private void Send(object command)
+        {
+            string json = JsonSerializer.Serialize(new { sensors = new[] { command } });
+            _serialPort.WriteLine(json);
+            System.Diagnostics.Debug.WriteLine($"SensorControl::Send() -> {json}");
+        }
+
+        // DTOs used only for deserializing the incoming JSON.
+        private class SensorMessage
+        {
+            [JsonPropertyName("sensors")]
+            public List<SensorState>? Sensors { get; set; }
+        }
+
+        private class SensorState
+        {
+            [JsonPropertyName("id")]
+            public string? Id { get; set; }
+
+            [JsonPropertyName("value")]
+            public JsonElement Value { get; set; } // number (temp) or {x,y,z} object (acc)
+
+            [JsonPropertyName("unit")]
+            public string? Unit { get; set; }
+
+            [JsonPropertyName("error")]
+            public string? Error { get; set; }
+        }
+    }
+
+    /// <summary>
+    /// Accumulates raw serial data and yields only complete lines (terminated
+    /// by '\n'), keeping any trailing partial line until the rest arrives.
+    /// DataReceived fires as soon as bytes arrive, so ReadExisting can end
+    /// mid-line; parsing such a fragment as JSON would silently fail.
+    /// </summary>
+    internal sealed class LineBuffer
+    {
+        private string _pending = "";
+
+        /// <summary>Appends a chunk and returns the complete, non-empty, trimmed lines.</summary>
+        public IEnumerable<string> AddData(string data)
+        {
+            _pending += data;
+
+            int lastNewline = _pending.LastIndexOf('\n');
+            if (lastNewline < 0)
+                return Array.Empty<string>(); // no complete line yet -> wait for more data
+
+            string complete = _pending.Substring(0, lastNewline);
+            _pending = _pending.Substring(lastNewline + 1);
+
+            return complete.Split('\n')
+                .Select(line => line.Trim())
+                .Where(line => line.Length > 0);
         }
     }
 
@@ -433,17 +762,30 @@ namespace SerialLedBtnLibEx
 
     /// <summary>
     /// Top-level controller. Owns the LED and servo (outgoing) and the
-    /// button/switch (incoming) sides of the JSON serial protocol.
+    /// button/switch and sensor (incoming) sides of the JSON serial protocol.
     /// </summary>
     public class JsonSerialController
     {
+        private readonly ISerialDataReadWrite _serialPort;
+        private readonly LineBuffer _lineBuffer = new();
+        private readonly object _receiveLock = new();
+
         //For serial port. Use the class SerialPortEx to implement ISerialDataReadWrite interface.
         public JsonSerialController(ISerialDataReadWrite serialReadWriter)
         {
-            var port = (ISerialDataReadWrite)serialReadWriter;
-            LedControl = new LedControl(port);
-            ServoControl = new ServoControl(port);
-            ButtonControl = new ButtonControl(port);
+            _serialPort = serialReadWriter;
+
+            // This controller is the ONLY reader of the port: it drains the
+            // data and hands every complete line to all incoming-message
+            // parsers. The controls must not subscribe themselves — a second
+            // subscriber calling ReadExisting would steal lines meant for the
+            // other parser (DataReceived events can even run concurrently).
+            _serialPort.DataReceived += OnDataReceived;
+
+            LedControl = new LedControl(_serialPort);
+            ServoControl = new ServoControl(_serialPort);
+            ButtonControl = new ButtonControl(_serialPort, subscribeToPort: false);
+            SensorControl = new SensorControl(_serialPort, subscribeToPort: false);
         }
 
         public LedControl LedControl { get; }
@@ -451,5 +793,23 @@ namespace SerialLedBtnLibEx
         public ServoControl ServoControl { get; }
 
         public ButtonControl ButtonControl { get; }
+
+        public SensorControl SensorControl { get; }
+
+        private void OnDataReceived(object? sender, SerialDataReceivedEventArgs e)
+        {
+            // DataReceived can fire on several thread-pool threads at once;
+            // the lock keeps reads and line handling in order.
+            lock (_receiveLock)
+            {
+                // ReadExisting can return several lines at once, or stop
+                // mid-line; the buffer hands back only complete lines.
+                foreach (string line in _lineBuffer.AddData(_serialPort.ReadExisting()))
+                {
+                    ButtonControl.ProcessLine(line);
+                    SensorControl.ProcessLine(line);
+                }
+            }
+        }
     }
 }
