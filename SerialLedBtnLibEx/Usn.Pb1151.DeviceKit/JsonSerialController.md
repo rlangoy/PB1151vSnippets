@@ -1,6 +1,6 @@
 # JsonSerialController — Class Documentation
 
-I/O library for the **SerialLedBtnLibEx** example (PB1151, USN).
+I/O library for the **Usn.Pb1151.DeviceKit** package (course PB1151, USN).
 
 `JsonSerialController` is a small object-oriented wrapper around a serial port (abstracted behind `ISerialDataReadWrite`, implemented by either `SerialPortEx` for USB serial or `BleNusEx` for BLE). It exposes the device as four parts:
 
@@ -152,7 +152,7 @@ flowchart TD
     M --> N["Subscriber's handler runs<br/>(still on background thread)"]
 ```
 
-> **Thread note:** `DataReceived` runs on a background thread, so any handler that updates Windows Forms controls must marshal to the UI thread with `BeginInvoke`. See `Form1.cs`.
+> **Thread note:** `DataReceived` runs on a background thread, so any handler that updates GUI controls (e.g. Windows Forms) must marshal to the UI thread, for example with `BeginInvoke`.
 
 ## Activity — sensors (request and reading)
 
@@ -194,6 +194,8 @@ Unlike a `Switch`, a sensor raises `DataChanged` for **every** reading — strea
 ## Usage
 
 ```csharp
+using Usn.Pb1151.DeviceKit;
+
 // SerialPortEx implements ISerialDataReadWrite; a plain SerialPort does not.
 var port = new SerialPortEx { PortName = "COM3", BaudRate = 9600 };
 port.Open();

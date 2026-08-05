@@ -6,6 +6,8 @@ The app controls four LEDs and one servo, reads three pushbuttons, and reads two
 
 ![Application window](Images/AppScreen.png)
 
+> The I/O library itself (`JsonSerialController`, `SerialPortEx`, `BleNusEx`) now lives in its own project, [`Usn.Pb1151.DeviceKit/`](Usn.Pb1151.DeviceKit/), so it can be published as a standalone NuGet package. This app references it as a project reference; see [`Usn.Pb1151.DeviceKit/README.md`](Usn.Pb1151.DeviceKit/README.md) for the library's own docs.
+
 Each row pairs an **LED** checkbox (output, PC → device) with a **SW** checkbox (input, device → PC):
 
 - Tick an `LED` box → that LED turns on.

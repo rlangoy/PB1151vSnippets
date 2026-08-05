@@ -10,7 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.IO.Ports" Version="10.0.9" />
+    <ProjectReference Include="Usn.Pb1151.DeviceKit\Usn.Pb1151.DeviceKit.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Usn.Pb1151.DeviceKit\**" />
+    <EmbeddedResource Remove="Usn.Pb1151.DeviceKit\**" />
+    <None Remove="Usn.Pb1151.DeviceKit\**" />
   </ItemGroup>
 
 </Project>

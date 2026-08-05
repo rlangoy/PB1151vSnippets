@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Usn.Pb1151.DeviceKit</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- NuGet package metadata -->
+    <PackageId>Usn.Pb1151.DeviceKit</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Rune Langøy</Authors>
+    <Company>University of South-Eastern Norway (USN)</Company>
+    <Description>I/O library for the PB1151 course microcontroller kit: control LEDs and a servo, read pushbuttons, and read a TMP102 temperature sensor and an ADXL345 accelerometer over a JSON serial protocol, via USB serial or Bluetooth LE (Nordic UART Service).</Description>
+    <PackageTags>usn;pb1151;serial;ble;bluetooth;microcontroller;iot;education</PackageTags>
+    <RepositoryUrl>https://github.com/&lt;your-github-username&gt;/SerialLedBtnLibEx</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IO.Ports" Version="10.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>

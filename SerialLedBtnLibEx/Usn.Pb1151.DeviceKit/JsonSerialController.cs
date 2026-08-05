@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace SerialLedBtnLibEx
+namespace Usn.Pb1151.DeviceKit
 {
     /// <summary>
     /// A single LED with an on/off (or brightness) value.

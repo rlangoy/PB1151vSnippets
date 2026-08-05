@@ -2,6 +2,7 @@ using System.IO.Ports;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 using System.Diagnostics;
+using Usn.Pb1151.DeviceKit;
 
 namespace SerialLedBtnLibEx
 {
@@ -50,10 +51,12 @@ namespace SerialLedBtnLibEx
             jsonSerialController.SensorControl["TEMP1"].DataChanged += Form1_TempSensorDataChanged;
             jsonSerialController.SensorControl.Read("TEMP1");
             jsonSerialController.SensorControl["ACC1"].DataChanged += Form1_DataChanged;
-            jsonSerialController.SensorControl.Read("ACC1");    
+            jsonSerialController.SensorControl.Read("ACC1");
+            jsonSerialController.SensorControl.Read("ACC1");
+            jsonSerialController.SensorControl.Read("ACC1");
         }
 
-        private void Form1_DataChanged(object? sender, SensorEventArgs e)
+        private void Form1_DataChanged(object?  sender, SensorEventArgs e)
         {
             if (sender is AccSensor sensor)
                 Debug.WriteLine($"Form1::Form1_AccSensorDataChanged {sensor.Id}: {sensor.X}, {sensor.Y}, {sensor.Z } {sensor.Unit}");

@@ -6,7 +6,7 @@ using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Storage.Streams;
 
 
-namespace SerialLedBtnLibEx
+namespace Usn.Pb1151.DeviceKit
 {
 
     /// <summary>Thrown when a BLE scan or connection attempt fails.</summary>
