@@ -8,7 +8,7 @@ namespace SerialLedBtnLibEx
 {
     public partial class Form1 : Form
     {
-        JsonSerialController jsonSerialController;
+        JsonSerialController jsonSerialController = null!; // assigned in Form1_Load before first use
 
         public Form1()
         {

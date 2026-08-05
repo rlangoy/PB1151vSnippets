@@ -15,15 +15,19 @@ namespace Usn.Pb1151.DeviceKit
     {
         private int _value;
 
+        /// <param name="id">The LED's protocol id, e.g. "LED1".</param>
+        /// <param name="value">The initial value (0 = off).</param>
         public LED(string id, int value = 0)
         {
             Id = id;
             _value = value; // set the field directly so the event does not fire during construction
         }
 
+        /// <summary>The LED's protocol id, e.g. "LED1".</summary>
         [JsonPropertyName("id")]
         public string Id { get; }
 
+        /// <summary>The LED's current value (0 = off, non-zero = on/brightness).</summary>
         [JsonPropertyName("value")]
         public int Value
         {
@@ -38,6 +42,7 @@ namespace Usn.Pb1151.DeviceKit
             }
         }
 
+        /// <summary>Raised when <see cref="Value"/> actually changes.</summary>
         public event EventHandler? ValueChanged;
     }
 
@@ -50,6 +55,7 @@ namespace Usn.Pb1151.DeviceKit
         private readonly ISerialDataReadWrite _serialPort;
         private bool _suppressUpdates;
 
+        /// <param name="serialPort">The serial connection used to push LED state updates.</param>
         public LedControl(ISerialDataReadWrite serialPort)
         {
             _serialPort = serialPort;
@@ -58,6 +64,7 @@ namespace Usn.Pb1151.DeviceKit
                 led.ValueChanged += OnLedValueChanged;
         }
 
+        /// <summary>The fixed set of LEDs owned by this control.</summary>
         [JsonPropertyName("leds")]
         public List<LED> Leds { get; } = new()
         {
@@ -72,10 +79,13 @@ namespace Usn.Pb1151.DeviceKit
             Leds.FirstOrDefault(led => led.Id == id)
             ?? throw new KeyNotFoundException($"No LED with id '{id}'.");
 
+        /// <summary>Turn every LED on.</summary>
         public void AllOn() => SetAll(1);
 
+        /// <summary>Turn every LED off.</summary>
         public void AllOff() => SetAll(0);
 
+        /// <summary>Full snapshot of every LED as JSON.</summary>
         public string ToJson() => JsonSerializer.Serialize(this);
 
         // Set every LED, then send a single update
@@ -118,15 +128,19 @@ namespace Usn.Pb1151.DeviceKit
     {
         private int _angle;
 
+        /// <param name="id">The servo's protocol id, e.g. "SV1".</param>
+        /// <param name="angle">The initial angle in degrees (clamped to 0-180).</param>
         public Servo(string id, int angle = 0)
         {
             Id = id;
             _angle = Clamp(angle); // set the field directly so the event does not fire during construction
         }
 
+        /// <summary>The servo's protocol id, e.g. "SV1".</summary>
         [JsonPropertyName("id")]
         public string Id { get; }
 
+        /// <summary>The servo's current angle in degrees (0-180).</summary>
         [JsonPropertyName("angle")]
         public int Angle
         {
@@ -142,6 +156,7 @@ namespace Usn.Pb1151.DeviceKit
             }
         }
 
+        /// <summary>Raised when <see cref="Angle"/> actually changes.</summary>
         public event EventHandler? ValueChanged;
 
         private static int Clamp(int angle) => Math.Clamp(angle, 0, 180);
@@ -160,6 +175,7 @@ namespace Usn.Pb1151.DeviceKit
         private readonly ISerialDataReadWrite _serialPort;
         private bool _suppressUpdates;
 
+        /// <param name="serialPort">The serial connection used to push servo commands.</param>
         public ServoControl(ISerialDataReadWrite serialPort)
         {
             _serialPort = serialPort;
@@ -168,6 +184,7 @@ namespace Usn.Pb1151.DeviceKit
                 servo.ValueChanged += OnServoValueChanged;
         }
 
+        /// <summary>The fixed set of servos owned by this control.</summary>
         [JsonPropertyName("servos")]
         public List<Servo> Servos { get; } = new()
         {
@@ -208,6 +225,11 @@ namespace Usn.Pb1151.DeviceKit
         /// </summary>
         public void Release(string id) => Release(this[id]);
 
+        /// <summary>
+        /// Release a servo so it stops holding torque (drops jitter/heat when idle).
+        /// The device re-attaches automatically on the servo's next angle command.
+        /// </summary>
+        /// <param name="servo">The servo to release.</param>
         public void Release(Servo servo)
         {
             // Release is an action, not a position, so it is sent on its own
@@ -255,13 +277,18 @@ namespace Usn.Pb1151.DeviceKit
     /// </summary>
     public class SwitchEventArgs : EventArgs
     {
+        /// <param name="id">The protocol id of the switch that changed.</param>
+        /// <param name="value">The switch's new value.</param>
         public SwitchEventArgs(string id, int value)
         {
             Id = id;
             Value = value;
         }
 
+        /// <summary>The protocol id of the switch that changed.</summary>
         public string Id { get; }
+
+        /// <summary>The switch's new value.</summary>
         public int Value { get; }
     }
 
@@ -273,15 +300,19 @@ namespace Usn.Pb1151.DeviceKit
     {
         private int _value;
 
+        /// <param name="id">The switch's protocol id, e.g. "SW1".</param>
+        /// <param name="value">The initial value.</param>
         public Switch(string id, int value = 0)
         {
             Id = id;
             _value = value;
         }
 
+        /// <summary>The switch's protocol id, e.g. "SW1".</summary>
         [JsonPropertyName("id")]
         public string Id { get; }
 
+        /// <summary>The switch's current value.</summary>
         [JsonPropertyName("value")]
         public int Value
         {
@@ -311,6 +342,7 @@ namespace Usn.Pb1151.DeviceKit
         private readonly LineBuffer _lineBuffer = new();
         private readonly object _receiveLock = new();
 
+        /// <param name="serialPort">The serial connection to read switch state from.</param>
         /// <param name="subscribeToPort">
         /// Pass false when another object (e.g. <see cref="JsonSerialController"/>)
         /// reads the port and dispatches lines to <see cref="ProcessLine"/>.
@@ -323,6 +355,7 @@ namespace Usn.Pb1151.DeviceKit
                 _serialPort.DataReceived += OnDataReceived;
         }
 
+        /// <summary>The fixed set of switches owned by this control.</summary>
         [JsonPropertyName("switches")]
         public List<Switch> Switches { get; } = new()
         {
@@ -420,12 +453,16 @@ namespace Usn.Pb1151.DeviceKit
     /// </summary>
     public class SensorEventArgs : EventArgs
     {
+        /// <param name="sensor">The sensor that produced the reading.</param>
         public SensorEventArgs(Sensor sensor)
         {
             Sensor = sensor;
         }
 
+        /// <summary>The sensor that produced the reading.</summary>
         public Sensor Sensor { get; }
+
+        /// <summary>The protocol id of <see cref="Sensor"/>.</summary>
         public string Id => Sensor.Id;
     }
 
@@ -434,13 +471,18 @@ namespace Usn.Pb1151.DeviceKit
     /// </summary>
     public class SensorErrorEventArgs : EventArgs
     {
+        /// <param name="id">The protocol id of the sensor that reported the error.</param>
+        /// <param name="error">The error text reported by the device.</param>
         public SensorErrorEventArgs(string id, string error)
         {
             Id = id;
             Error = error;
         }
 
+        /// <summary>The protocol id of the sensor that reported the error.</summary>
         public string Id { get; }
+
+        /// <summary>The error text reported by the device.</summary>
         public string Error { get; }
     }
 
@@ -451,12 +493,15 @@ namespace Usn.Pb1151.DeviceKit
     /// </summary>
     public abstract class Sensor
     {
+        /// <param name="id">The sensor's protocol id, e.g. "TEMP1".</param>
+        /// <param name="unit">The sensor's measurement unit, e.g. "C" or "g".</param>
         protected Sensor(string id, string unit)
         {
             Id = id;
             Unit = unit;
         }
 
+        /// <summary>The sensor's protocol id, e.g. "TEMP1".</summary>
         [JsonPropertyName("id")]
         public string Id { get; }
 
@@ -490,9 +535,13 @@ namespace Usn.Pb1151.DeviceKit
             return true;
         }
 
+        /// <summary>Raises <see cref="ErrorReceived"/> for an error reported by the device.</summary>
+        /// <param name="error">The error text reported by the device.</param>
         public void ApplyError(string error) =>
             ErrorReceived?.Invoke(this, new SensorErrorEventArgs(Id, error));
 
+        /// <summary>Parses the sensor-specific "value" payload. Returns false if the shape doesn't match.</summary>
+        /// <param name="value">The "value" JSON element from the device message.</param>
         protected abstract bool TryParseValue(JsonElement value);
     }
 
@@ -502,6 +551,7 @@ namespace Usn.Pb1151.DeviceKit
     /// </summary>
     public class TempSensor : Sensor
     {
+        /// <param name="id">The sensor's protocol id, e.g. "TEMP1".</param>
         public TempSensor(string id) : base(id, "C")
         {
         }
@@ -509,6 +559,7 @@ namespace Usn.Pb1151.DeviceKit
         /// <summary>Last received temperature in <see cref="Sensor.Unit"/>.</summary>
         public double Value { get; private set; }
 
+        /// <inheritdoc/>
         protected override bool TryParseValue(JsonElement value)
         {
             if (value.ValueKind != JsonValueKind.Number)
@@ -525,15 +576,21 @@ namespace Usn.Pb1151.DeviceKit
     /// </summary>
     public class AccSensor : Sensor
     {
+        /// <param name="id">The sensor's protocol id, e.g. "ACC1".</param>
         public AccSensor(string id) : base(id, "g")
         {
         }
 
         /// <summary>Last received acceleration in <see cref="Sensor.Unit"/>.</summary>
         public double X { get; private set; }
+
+        /// <summary>Last received acceleration in <see cref="Sensor.Unit"/>.</summary>
         public double Y { get; private set; }
+
+        /// <summary>Last received acceleration in <see cref="Sensor.Unit"/>.</summary>
         public double Z { get; private set; }
 
+        /// <inheritdoc/>
         protected override bool TryParseValue(JsonElement value)
         {
             if (value.ValueKind != JsonValueKind.Object
@@ -566,6 +623,7 @@ namespace Usn.Pb1151.DeviceKit
         private readonly LineBuffer _lineBuffer = new();
         private readonly object _receiveLock = new();
 
+        /// <param name="serialPort">The serial connection to read sensor readings from and send requests to.</param>
         /// <param name="subscribeToPort">
         /// Pass false when another object (e.g. <see cref="JsonSerialController"/>)
         /// reads the port and dispatches lines to <see cref="ProcessLine"/>.
@@ -578,6 +636,7 @@ namespace Usn.Pb1151.DeviceKit
                 _serialPort.DataReceived += OnDataReceived;
         }
 
+        /// <summary>The fixed set of sensors owned by this control.</summary>
         [JsonPropertyName("sensors")]
         public List<Sensor> Sensors { get; } = new()
         {
@@ -735,16 +794,31 @@ namespace Usn.Pb1151.DeviceKit
         }
     }
 
+    /// <summary>
+    /// Abstraction over a duplex text connection (serial port or BLE UART),
+    /// implemented by <see cref="SerialPortEx"/> and <see cref="BleNusEx"/>.
+    /// </summary>
     public interface ISerialDataReadWrite
     {
+        /// <summary>Writes <paramref name="text"/> followed by a line terminator.</summary>
+        /// <param name="text">The text to send.</param>
         void WriteLine(string text);
+
+        /// <summary>Returns all data received since the last call.</summary>
         string ReadExisting();
+
+        /// <summary>Raised when data arrives on the connection.</summary>
         event SerialDataReceivedEventHandler DataReceived;
     }
 
-    // This class inherits from SerialPort and implements ISerialDataReadWrite, so it can be used in place as a SerialPort object
+    /// <summary>
+    /// Extends <see cref="SerialPort"/> with the <see cref="ISerialDataReadWrite"/>
+    /// interface, so it can be used interchangeably with other implementations
+    /// such as <see cref="BleNusEx"/>.
+    /// </summary>
     public sealed class SerialPortEx : SerialPort, ISerialDataReadWrite
     {
+        /// <summary>Creates a new, unconfigured serial port.</summary>
         public SerialPortEx()
         {
             // Forward the native SerialPort.DataReceived event to ISerialDataReadWrite subscribers.
@@ -770,7 +844,10 @@ namespace Usn.Pb1151.DeviceKit
         private readonly LineBuffer _lineBuffer = new();
         private readonly object _receiveLock = new();
 
-        //For serial port. Use the class SerialPortEx to implement ISerialDataReadWrite interface.
+        /// <param name="serialReadWriter">
+        /// The connection to communicate over. Use <see cref="SerialPortEx"/> for a
+        /// USB serial port, or <see cref="BleNusEx"/> for a BLE Nordic UART Service connection.
+        /// </param>
         public JsonSerialController(ISerialDataReadWrite serialReadWriter)
         {
             _serialPort = serialReadWriter;
@@ -788,12 +865,16 @@ namespace Usn.Pb1151.DeviceKit
             SensorControl = new SensorControl(_serialPort, subscribeToPort: false);
         }
 
+        /// <summary>The LED (outgoing) side of the protocol.</summary>
         public LedControl LedControl { get; }
 
+        /// <summary>The servo (outgoing) side of the protocol.</summary>
         public ServoControl ServoControl { get; }
 
+        /// <summary>The button/switch (incoming) side of the protocol.</summary>
         public ButtonControl ButtonControl { get; }
 
+        /// <summary>The sensor (incoming) side of the protocol.</summary>
         public SensorControl SensorControl { get; }
 
         private void OnDataReceived(object? sender, SerialDataReceivedEventArgs e)

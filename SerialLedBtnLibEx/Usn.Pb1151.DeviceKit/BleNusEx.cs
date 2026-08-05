@@ -12,7 +12,11 @@ namespace Usn.Pb1151.DeviceKit
     /// <summary>Thrown when a BLE scan or connection attempt fails.</summary>
     public sealed class BleConnectionException : Exception
     {
+        /// <param name="message">A message describing the connection failure.</param>
         public BleConnectionException(string message) : base(message) { }
+
+        /// <param name="message">A message describing the connection failure.</param>
+        /// <param name="inner">The underlying exception that caused the failure.</param>
         public BleConnectionException(string message, Exception inner) : base(message, inner) { }
     }
 
@@ -21,6 +25,7 @@ namespace Usn.Pb1151.DeviceKit
     /// </summary>
     public sealed class NusDataReceivedEventArgs : EventArgs
     {
+        /// <param name="text">The decoded UTF-8 text received from the peripheral.</param>
         public NusDataReceivedEventArgs(string text) => Text = text;
 
         /// <summary>The decoded UTF-8 text received from the peripheral.</summary>
@@ -68,6 +73,7 @@ namespace Usn.Pb1151.DeviceKit
             _deviceName = deviceName;
         }
 
+        /// <summary>Whether the peripheral is currently connected.</summary>
         public bool IsConnected => _device?.ConnectionStatus == BluetoothConnectionStatus.Connected;
 
         /// <summary>
@@ -257,6 +263,9 @@ namespace Usn.Pb1151.DeviceKit
 
         // --- Cleanup ------------------------------------------------------------
 
+        /// <summary>
+        /// Unsubscribes from notifications, disconnects, and releases the underlying BLE resources.
+        /// </summary>
         public async ValueTask DisposeAsync()
         {
             if (_txCharacteristic is not null)
