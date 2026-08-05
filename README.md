@@ -124,3 +124,9 @@ Toggle the LED checkboxes to drive the LEDs; press the physical switches to see 
 ## Course
 
 University of South-Eastern Norway (USN) — PB1151 Objektorientert programmering og databaser.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+Copyright (c) 2026 Rune Langøy

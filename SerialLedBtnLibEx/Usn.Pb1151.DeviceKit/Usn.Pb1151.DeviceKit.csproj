@@ -20,6 +20,8 @@
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Copyright>Copyright © 2026 Rune Langøy</Copyright>
+    <PackageReleaseNotes>1.0.0: Initial release. JsonSerialController with LedControl, ServoControl, ButtonControl, and SensorControl (TMP102 temperature, ADXL345 acceleration). Two transports: SerialPortEx (USB serial) and BleNusEx (BLE Nordic UART Service), both behind ISerialDataReadWrite.</PackageReleaseNotes>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
