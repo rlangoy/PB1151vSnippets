@@ -26,7 +26,7 @@
   <PropertyGroup>
     <!-- NuGet package metadata -->
     <PackageId>Usn.Pb1151.DeviceKit</PackageId>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
     <Authors>Rune Langøy</Authors>
     <Company>University of South-Eastern Norway (USN)</Company>
     <Description>A C# Serial/BLE interface library for the PB1151 microcontroller, developed for the PB1151 – Objektorientert programmering og databaser course at USN. It talks to a microcontroller board (4 LEDs, 1 servo, 3 pushbuttons, a TMP102 temperature sensor, and an ADXL345 accelerometer) over a line-based JSON protocol, connected via either a USB serial port or Bluetooth Low Energy (Nordic UART Service).</Description>
@@ -37,7 +37,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Copyright>Copyright © 2026 Rune Langøy</Copyright>
-    <PackageReleaseNotes>1.1.1: Updated README and package description/project URL; no API changes. 1.1.0: Multi-targeted the package for net10.0-windows and net10.0-windows10.0.17763.0, so it now restores in projects created from the standard WinForms/WPF templates (which target plain net10.0-windows) without editing the consuming project's TargetFramework. On net10.0-windows, everything is available except BleNusEx (BLE requires the WinRT projections only available on the versioned windows10.0.17763.0 TFM); bump the consuming project's TargetFramework to net10.0-windows10.0.17763.0 to use BLE. 1.0.1: Lowered the minimum target Windows version from 10.0.19041.0 to 10.0.17763.0 (Windows 10, version 1809) to relax consuming-project TargetFramework requirements; no API changes. 1.0.0: Initial release. JsonSerialController with LedControl, ServoControl, ButtonControl, and SensorControl (TMP102 temperature, ADXL345 acceleration). Two transports: SerialPortEx (USB serial) and BleNusEx (BLE Nordic UART Service), both behind ISerialDataReadWrite.</PackageReleaseNotes>
+    <PackageReleaseNotes>1.1.2: Small README documentation update; no API changes. 1.1.1: Updated README and package description/project URL; no API changes. 1.1.0: Multi-targeted the package for net10.0-windows and net10.0-windows10.0.17763.0, so it now restores in projects created from the standard WinForms/WPF templates (which target plain net10.0-windows) without editing the consuming project's TargetFramework. On net10.0-windows, everything is available except BleNusEx (BLE requires the WinRT projections only available on the versioned windows10.0.17763.0 TFM); bump the consuming project's TargetFramework to net10.0-windows10.0.17763.0 to use BLE. 1.0.1: Lowered the minimum target Windows version from 10.0.19041.0 to 10.0.17763.0 (Windows 10, version 1809) to relax consuming-project TargetFramework requirements; no API changes. 1.0.0: Initial release. JsonSerialController with LedControl, ServoControl, ButtonControl, and SensorControl (TMP102 temperature, ADXL345 acceleration). Two transports: SerialPortEx (USB serial) and BleNusEx (BLE Nordic UART Service), both behind ISerialDataReadWrite.</PackageReleaseNotes>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

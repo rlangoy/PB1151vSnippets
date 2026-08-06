@@ -17,6 +17,7 @@ Requires **.NET 10** on **Windows** (the BLE transport uses the Windows Runtime 
 ## Quick start
 
 ```csharp
+using System.Diagnostics;
 using Usn.Pb1151.DeviceKit;
 
 // Connect over USB serial...
@@ -43,6 +44,7 @@ controller.ButtonControl["SW1"].ValueChanged += (s, e) =>
 ## Usage
 
 ```csharp
+using System.Diagnostics;
 using Usn.Pb1151.DeviceKit;
 
 // SerialPortEx implements ISerialDataReadWrite; a plain SerialPort does not.
