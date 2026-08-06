@@ -1,8 +1,10 @@
 # Usn.Pb1151.DeviceKit
 
-A small C# I/O library for the **PB1151 – Objektorientert programmering og databaser** course at **USN**.
+A C# Serial/BLE interface library for the PB1151 microcontroller, developed for the **PB1151 – Objektorientert programmering og databaser** course at **USN**.
 
-It talks to a microcontroller board (4 LEDs, 1 servo, 3 pushbuttons, a TMP102 temperature sensor, and an ADXL345 accelerometer) over a line-based JSON protocol, connected either via a USB serial port or Bluetooth Low Energy (Nordic UART Service). You use it as an object-oriented API — setting properties and subscribing to events — without touching JSON or the raw port yourself.
+The library communicates with the microcontroller board (4 LEDs, 1 servo, 3 pushbuttons, a TMP102 temperature sensor, and an ADXL345 accelerometer) over a line-based JSON protocol, connected via either a USB serial port or Bluetooth Low Energy (Nordic UART Service). It is consumed as an object-oriented API — setting properties and subscribing to events — without direct handling of JSON or the underlying port.
+
+The firmware for the kit and its interface description are available at [PB1151vSnippets/Firmware/Micropython/jsonSerialAndBLE](https://github.com/rlangoy/PB1151vSnippets/tree/main/Firmware/Micropython/jsonSerialAndBLE).
 
 ## Install
 
