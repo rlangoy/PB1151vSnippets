@@ -35,18 +35,62 @@ controller.ServoControl["SV1"].Angle = 90;
 
 // React to a pushbutton
 controller.ButtonControl["SW1"].ValueChanged += (s, e) =>
-    Console.WriteLine($"{e.Id} = {e.Value}");
+    Debug.WriteLine($"{e.Id} = {e.Value}");
+```
 
-// Read the temperature sensor once
+## Usage
+
+```csharp
+using Usn.Pb1151.DeviceKit;
+
+// SerialPortEx implements ISerialDataReadWrite; a plain SerialPort does not.
+var port = new SerialPortEx { PortName = "COM3", BaudRate = 9600 };
+port.Open();
+var controller = new JsonSerialController(port);
+
+// Outgoing: turn LED1 on
+controller.LedControl["LED1"].Value = 1;
+
+// Outgoing: move SV1 to 90 degrees, then let it go slack
+controller.ServoControl["SV1"].Angle = 90;
+controller.ServoControl.Release("SV1");
+
+// Incoming: react to SW1
+controller.ButtonControl["SW1"].ValueChanged += (s, e) =>
+{
+    Debug.WriteLine($"{e.Id} = {e.Value}");
+};
+
+// Sensors: react to readings, then request them
 controller.SensorControl["TEMP1"].DataChanged += (s, e) =>
 {
     var temp = (TempSensor)e.Sensor;
-    Console.WriteLine($"{temp.Value} {temp.Unit}");
+    Debug.WriteLine($"{temp.Id}: {temp.Value} {temp.Unit}");
 };
-controller.SensorControl.Read("TEMP1");
+controller.SensorControl["ACC1"].DataChanged += (s, e) =>
+{
+    var acc = (AccSensor)e.Sensor;
+    Debug.WriteLine($"{acc.Id}: x={acc.X} y={acc.Y} z={acc.Z} {acc.Unit}");
+};
+controller.SensorControl.SensorError += (s, e) =>
+{
+    Debug.WriteLine($"{e.Id} error: {e.Error}");
+};
+
+controller.SensorControl.Read("TEMP1");          // one-shot read
+controller.SensorControl.StartStream("ACC1", 50); // stream every 50 ms
+controller.SensorControl.StopStream("ACC1");      // stop the stream
 ```
 
-## What's in the box
+`BleNusEx` implements `ISerialDataReadWrite` too, so it drops in unchanged:
+
+```csharp
+var ble = new BleNusEx("Pico-NUS");
+await ble.ConnectAsync(TimeSpan.FromSeconds(15));
+var controller = new JsonSerialController(ble);
+```
+
+## Library contents
 
 | Type | Purpose |
 |---|---|
@@ -55,7 +99,9 @@ controller.SensorControl.Read("TEMP1");
 | `BleNusEx` | `ISerialDataReadWrite` over BLE (Nordic UART Service). Drop-in replacement for `SerialPortEx`. |
 | `ISerialDataReadWrite` | The transport abstraction — implement it yourself to plug in a different transport or a test double. |
 
-Full API reference, JSON wire protocol, and sequence diagrams: see [`JsonSerialController.md`](JsonSerialController.md).
+## Documentation
+
+Full API reference, JSON wire protocol, and sequence diagrams: [JsonSerialController.md](https://github.com/rlangoy/PB1151vSnippets/blob/main/SerialLedBtnLibEx/Usn.Pb1151.DeviceKit/JsonSerialController.md)
 
 ## Example project
 
