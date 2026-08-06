@@ -52,8 +52,7 @@ namespace SerialLedBtnLibEx
             jsonSerialController.SensorControl.Read("TEMP1");
             jsonSerialController.SensorControl["ACC1"].DataChanged += Form1_DataChanged;
             jsonSerialController.SensorControl.Read("ACC1");
-            jsonSerialController.SensorControl.Read("ACC1");
-            jsonSerialController.SensorControl.Read("ACC1");
+            jsonSerialController.ServoControl.SetAll(this.trackBar1.Value);
         }
 
         private void Form1_DataChanged(object?  sender, SensorEventArgs e)
