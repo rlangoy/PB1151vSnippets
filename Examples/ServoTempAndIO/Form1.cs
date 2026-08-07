@@ -55,6 +55,7 @@ namespace SerialLedBtnLibEx
             jsonSerialController.ButtonControl["SW4"].ValueChanged += Form1_SwitchStateChanged;
             jsonSerialController.SensorControl["TEMP1"].DataChanged += Form1_TempSensorDataChanged;
             jsonSerialController.SensorControl.StartStream("TEMP1", 25);  // stream every 25 ms (max recomended speed)
+            jsonSerialController.LedControl.AllOff();  // turn off all LEDs at startup
             jsonSerialController.ServoControl.SetAll(trackBar1.Value);   // set all servos to the same angle (0 deg)
 
         }
@@ -154,6 +155,14 @@ namespace SerialLedBtnLibEx
         private void groupBox2_Enter(object sender, EventArgs e)
         {
 
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {   // Stop streaming sensors when the form is closing
+            // If the sensor is streaming, it will continue to stream even after the form is closed, which can problems acessing close objects
+
+            jsonSerialController.SensorControl.StopStream("TEMP1");
+            jsonSerialController.SensorControl.StopStream("ACC1");
         }
     }
 }
