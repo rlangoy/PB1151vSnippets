@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Usn.Pb1151.DeviceKit\**" />
+    <EmbeddedResource Remove="Usn.Pb1151.DeviceKit\**" />
+    <None Remove="Usn.Pb1151.DeviceKit\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ScottPlot.WinForms" Version="5.1.59" />
+    <PackageReference Include="Usn.Pb1151.DeviceKit" Version="1.1.2" />
+  </ItemGroup>
+
+</Project>
