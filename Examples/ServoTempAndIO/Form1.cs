@@ -49,8 +49,6 @@ namespace SerialLedBtnLibEx
 
             // _serialDev implements ISerialDataReadWrite, so it drops straight into the JsonSerialController.
             jsonSerialController = new JsonSerialController(_serialDev);
-            jsonSerialController.LedControl["LED2"].Value=1; // turn on LED2 at startup
-            jsonSerialController.ServoControl["SV1"].Angle = 0;
             jsonSerialController.ButtonControl["SW1"].ValueChanged += Form1_SwitchStateChanged;
             jsonSerialController.ButtonControl["SW2"].ValueChanged += Form1_SwitchStateChanged;
             jsonSerialController.ButtonControl["SW3"].ValueChanged += Form1_SwitchStateChanged;
